@@ -24,6 +24,11 @@ CommunityContacts = db.Table('CommunityContacts',
     db.Column('contact_id', db.Integer, db.ForeignKey('contact.id'))
 )
 
+PrefixNameServers = db.Table('PrefixNameServers',
+    db.Column('prefix_id',db.Integer, db.ForeignKey('prefix.id')),
+    db.Column('name_server_id',db.Integer, db.ForeignKey('name_server.id'))
+)
+
 class Community(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(260), unique=True)
@@ -32,6 +37,7 @@ class Community(db.Model):
     ces = db.relationship('CustomerEdge', secondary=CommunityCEs,backref=db.backref('Community', lazy='dynamic'))
     asns = db.relationship('AS', secondary=CommunityASNs,backref=db.backref('Community', lazy='dynamic'))
     prefixes = db.relationship('Prefix', backref='Community', lazy='dynamic')
+    nameservers = db.relationship('NameServer', backref='Community', lazy='dynamic')
     def __repr__(self):
         return self.name
 
@@ -109,7 +115,7 @@ class Prefix(db.Model):
     prefix = db.Column(db.String(260), unique=True)
     version = db.Column(db.Integer)
     community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
-    nameserer_id = db.Column(db.Integer, db.ForeignKey('name_server.id'))
+    contacts = db.relationship('Prefix', secondary=PrefixNameServers,backref=db.backref('Prefix', lazy='dynamic'))
     site_id = db.Column(db.Integer, db.ForeignKey('site.id'))
     def __repr__(self):
         return self.prefix
@@ -119,7 +125,6 @@ class NameServer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fqdn = db.Column(db.String(260), unique=True)
     community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
-    prefixes = db.relationship('Prefix', backref='NameServer', lazy='dynamic')
     def __repr__(self):
         return self.fqdn
 
