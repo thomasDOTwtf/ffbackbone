@@ -107,7 +107,7 @@ class PeeringSession(db.Model):
     ce_v6 = db.Column(db.String(260), unique=True)
     sessiontype_id = db.Column(db.Integer, db.ForeignKey('session_type.id'))
     def __repr__(self):
-        return '{self.pe_v4} - {self.ce_ipv4}'.format(self=self)
+        return '{self.pe_v4} - {self.ce_v4}'.format(self=self)
 
 
 class Prefix(db.Model):
@@ -115,7 +115,7 @@ class Prefix(db.Model):
     prefix = db.Column(db.String(260), unique=True)
     version = db.Column(db.Integer)
     community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
-    contacts = db.relationship('Prefix', secondary=PrefixNameServers,backref=db.backref('Prefix', lazy='dynamic'))
+    nameservers = db.relationship('NameServer', secondary=PrefixNameServers,backref=db.backref('Prefix', lazy='dynamic'))
     site_id = db.Column(db.Integer, db.ForeignKey('site.id'))
     def __repr__(self):
         return self.prefix
@@ -131,6 +131,7 @@ class NameServer(db.Model):
 class SessionType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True)
+    sessions = db.relationship('PeeringSession', backref='SessionType', lazy='dynamic')
     def __repr__(self):
         return self.name
 
