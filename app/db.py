@@ -91,6 +91,9 @@ class Contact(db.Model):
 class Site(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(260), unique=True)
+    country = db.Column(db.String(2))
+    city = db.Column(db.String(5))
+    datacenter = db.Column(db.String(5))
     provideredges = db.relationship('ProviderEdge', backref='Site', lazy='dynamic')
     prefixes = db.relationship('Prefix', backref='Site', lazy='dynamic')
     def __repr__(self):
