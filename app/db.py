@@ -1,7 +1,7 @@
 from app import app
 from flask.ext.sqlalchemy import SQLAlchemy
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Kennwort1@localhost/testdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Kennwort1@localhost/testdb?charset=utf8&use_unicode=0'
 db = SQLAlchemy(app)
 
 CommunityCEs = db.Table('CommunityCEs',
@@ -31,8 +31,9 @@ PrefixNameServers = db.Table('PrefixNameServers',
 
 class Community(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(260), unique=True)
+    name = db.Column(db.Unicode(260), unique=True)
     short = db.Column(db.String(6), unique=True)
+    created = db.Column(db.DateTime)
     contacts = db.relationship('Contact', secondary=CommunityContacts,backref=db.backref('Community', lazy='dynamic'))
     ces = db.relationship('CustomerEdge', secondary=CommunityCEs,backref=db.backref('Community', lazy='dynamic'))
     asns = db.relationship('AS', secondary=CommunityASNs,backref=db.backref('Community', lazy='dynamic'))
@@ -70,6 +71,9 @@ class AS(db.Model):
     asn = db.Column(db.Integer, unique=True)
     name = db.Column(db.String(260), unique=True)
     descr = db.Column(db.String(260), unique=True)
+    created = db.Column(db.DateTime)
+    changed = db.Column(db.DateTime)
+    approved = db.Column(db.DateTime)
     contacts = db.relationship('Contact', secondary=ASContacts,backref=db.backref('AS', lazy='dynamic'))
     provideredges = db.relationship('ProviderEdge', backref='AS', lazy='dynamic', uselist='False')
     def __repr__(self):
@@ -77,14 +81,15 @@ class AS(db.Model):
 
 class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    mail = db.Column(db.String(260), unique=True)
-    nickname = db.Column(db.String(260), unique=True)
-    xmpp = db.Column(db.String(260), unique=True)
-    firstname = db.Column(db.String(260), unique=True)
-    lastname = db.Column(db.String(260), unique=True)
-    login = db.Column(db.String(260), unique=True)
+    mail = db.Column(db.Unicode(260), unique=True)
+    nickname = db.Column(db.Unicode(260), unique=True)
+    xmpp = db.Column(db.Unicode(260), unique=True)
+    firstname = db.Column(db.Unicode(260), unique=True)
+    lastname = db.Column(db.Unicode(260), unique=True)
+    login = db.Column(db.Unicode(260), unique=True)
     password = db.Column(db.String(260), unique=True)
     handle = db.Column(db.String(260), unique=True)
+    admin = db.Column(db.Boolean)
     def __repr__(self):
         return '{self.nickname} ({self.mail})'.format(self=self)
 
@@ -108,7 +113,8 @@ class PeeringSession(db.Model):
     pe_v6 = db.Column(db.String(260), unique=True)
     ce_v4 = db.Column(db.String(260), unique=True)
     ce_v6 = db.Column(db.String(260), unique=True)
-    sessiontype_id = db.Column(db.Integer, db.ForeignKey('session_type.id'))
+    enabled = db.Column(db.Boolean)
+    tunneltype_id = db.Column(db.Integer, db.ForeignKey('tunnel_type.id'))
     def __repr__(self):
         return '{self.pe_v4} - {self.ce_v4}'.format(self=self)
 
@@ -131,10 +137,10 @@ class NameServer(db.Model):
     def __repr__(self):
         return self.fqdn
 
-class SessionType(db.Model):
+class TunnelType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True)
-    sessions = db.relationship('PeeringSession', backref='SessionType', lazy='dynamic')
+    sessions = db.relationship('PeeringSession', backref='TunnelType', lazy='dynamic')
     def __repr__(self):
         return self.name
 
