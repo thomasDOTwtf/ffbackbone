@@ -13,7 +13,7 @@ admin.add_view(ModelView(AS, db.session))
 admin.add_view(ModelView(Contact, db.session))
 admin.add_view(ModelView(PeeringSession, db.session))
 admin.add_view(ModelView(NameServer, db.session))
-admin.add_view(ModelView(SessionType, db.session))
+admin.add_view(ModelView(TunnelType, db.session))
 
 
 @app.route('/')
