@@ -129,7 +129,7 @@ class Prefix(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     prefix = db.Column(db.String(260), unique=True)
     version = db.Column(db.Integer)
-    prefix_type = db.Column(db.Integer, db.ForeignKey('prefix_type.id'))
+    prefixtype_id = db.Column(db.Integer, db.ForeignKey('prefix_type.id'))
     community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
     contacts = db.relationship('Contact', secondary=PrefixContacts,backref=db.backref('Prefix', lazy='dynamic'))
     nameservers = db.relationship('NameServer', secondary=PrefixNameServers,backref=db.backref('Prefix', lazy='dynamic'))
@@ -140,6 +140,7 @@ class Prefix(db.Model):
 class PrefixType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(260), unique=True)
+    prefixes = db.relationship('Prefix', backref='PrefixType', lazy='dynamic')
     def __repr__(self):
         return self.name
     
