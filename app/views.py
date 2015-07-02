@@ -14,7 +14,7 @@ admin.add_view(ModelView(Contact, db.session))
 admin.add_view(ModelView(PeeringSession, db.session))
 admin.add_view(ModelView(NameServer, db.session))
 admin.add_view(ModelView(TunnelType, db.session))
-
+admin.add_view(ModelView(PrefixType, db.session))
 
 @app.route('/')
 @app.route('/index')

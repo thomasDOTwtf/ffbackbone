@@ -1,7 +1,8 @@
 from app import app
 from flask.ext.sqlalchemy import SQLAlchemy
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Kennwort1@localhost/testdb?charset=utf8&use_unicode=0'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Kennwort1@localhost/testdb?charset=utf8&use_unicode=0'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://testdb:testdb@localhost:5432/testdb'
 db = SQLAlchemy(app)
 
 CommunityCEs = db.Table('CommunityCEs',
@@ -123,12 +124,19 @@ class Prefix(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     prefix = db.Column(db.String(260), unique=True)
     version = db.Column(db.Integer)
+    prefix_type = db.relationship('PrefixType', secondary=PrefixNameServers,backref=db.backref('Prefix', lazy='dynamic'))
     community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
+    contacts = db.relationship('Contact', secondary=ASContacts,backref=db.backref('AS', lazy='dynamic'))
     nameservers = db.relationship('NameServer', secondary=PrefixNameServers,backref=db.backref('Prefix', lazy='dynamic'))
     site_id = db.Column(db.Integer, db.ForeignKey('site.id'))
     def __repr__(self):
         return self.prefix
 
+class PrefixType(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(260), unique=True)
+    def __repr__(self):
+        return self.name
     
 class NameServer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
