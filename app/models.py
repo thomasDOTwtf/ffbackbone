@@ -1,8 +1,10 @@
 from app import app
 from flask.ext.sqlalchemy import SQLAlchemy
-
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Kennwort1@localhost/testdb?charset=utf8&use_unicode=0'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://testdb:testdb@localhost:5432/testdb'
+from werkzeug import generate_password_hash, check_password_hash
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+ 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Kennwort1@localhost/testdb?charset=utf8&use_unicode=0'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://testdb:testdb@localhost:5432/testdb'
 db = SQLAlchemy(app)
 
 CommunityCEs = db.Table('CommunityCEs',
@@ -98,6 +100,46 @@ class Contact(db.Model):
     admin = db.Column(db.Boolean)
     def __repr__(self):
         return '{self.nickname} ({self.mail})'.format(self=self)
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        try:
+            return unicode(self.id)  # python 2
+        except NameError:
+            return str(self.id)  # python 3
+
+    def __repr__(self):
+        return '<User %r>' % (self.nickname) 
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+   
+    def verify_password(self, password):
+        return check_password_hash(self.password, password)
+
+    def generate_reset_token(self, expiration=3600):
+        s = Serializer(app.config['SECRET_KEY'], expiration)
+        return s.dumps({'reset': self.id})
+
+    def reset_password(self, token, new_password):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+        if data.get('reset') != self.id:
+            return False
+        self.password = new_password
+        db.session.add(self)
+        return True
 
 class Site(db.Model):
     id = db.Column(db.Integer, primary_key=True)
