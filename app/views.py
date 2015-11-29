@@ -7,9 +7,9 @@ from flask import Flask, Response
 from flask.ext.login import LoginManager, UserMixin, login_required
 from flask_bootstrap import Bootstrap
 
-from models import *
-from forms import *
-from email import *
+from app.models import *
+from app.forms import *
+from app.email import *
 
 admin = Admin(app)
 admin.add_view(ModelView(Community, db.session))
