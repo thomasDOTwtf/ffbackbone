@@ -81,6 +81,7 @@ class CustomerEdge(db.Model):
     fqdn = db.Column(db.String(260), unique=True)
     ipv4 = db.Column(db.String(260), unique=True)
     ipv6 = db.Column(db.String(260), unique=True)
+    asn_id = db.Column(db.Integer, db.ForeignKey('AS.id'))
     sessions = db.relationship(
             'PeeringSession',
             backref='CustomerEdge',
@@ -124,6 +125,12 @@ class AS(db.Model):
             )
     provideredges = db.relationship(
             'ProviderEdge',
+            backref='AS',
+            lazy='dynamic',
+            uselist='False'
+            )
+    customeredges = db.relationship(
+            'CustomerEdge',
             backref='AS',
             lazy='dynamic',
             uselist='False'
