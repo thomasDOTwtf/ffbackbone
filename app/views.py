@@ -116,8 +116,13 @@ def password_reset(token):
 @app.route('/prefixes')
 @login_required
 def prefixes():
-    community = Community.query.join(Contact, Community.contacts).filter_by(id=current_user.id).first_or_404()
-    prefixes = Prefix.query.filter_by(community_id=community.id).options(db.joinedload('contacts'))
+    community = Community.query.join(
+            Contact,
+            Community.contacts
+            ).filter_by(id=current_user.id).first_or_404()
+    prefixes = Prefix.query.filter_by(
+            community_id=community.id
+            ).options(db.joinedload('contacts'))
     if prefixes.count() == 0:
         flash('No prefixes are currently assigned to you.')  # noqa
         return redirect(url_for('index'))
@@ -129,9 +134,21 @@ def prefixes():
 @login_required
 def contact(contact_id):
     contact = Contact.query.filter_by(id=contact_id).first_or_404()
-    community = Community.query.join(Contact, Community.contacts).filter_by(id=current_user.id).one()
-    if 0:
-        flash('No prefixes are currently assigned to you.')  # noqa
+    communities_self = Community.query.join(
+            Contact,
+            Community.contacts
+            ).filter_by(id=current_user.id)
+    communities_edit = Community.query.join(
+            Contact,
+            Community.contacts
+            ).filter_by(id=contact_id)
+    same = False
+    for community_self in communities_self:
+        for community_edit in communities_edit:
+            if community_edit.id == community_self.id:
+                same = True
+    if (current_user.admin is False and int(contact_id) != current_user.id) or (current_user.admin is True and same is False):  # noqa
+        flash('You don''t have permissions to edit selected contact information')  # noqa
         return redirect(url_for('index'))
     return render_template('contact/detail.html',
                            contact=contact)
