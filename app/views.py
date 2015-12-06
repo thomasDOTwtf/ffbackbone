@@ -154,6 +154,24 @@ def contact(contact_id):
                            contact=contact)
 
 
+@app.route('/contacts')
+@login_required
+def contacts():
+    communities_self = Community.query.join(
+            Contact,
+            Community.contacts
+            ).filter_by(id=current_user.id).options(db.joinedload('contacts'))
+    contacts = set()
+    for community_self in communities_self:
+        for contact in community_self.contacts:
+            if contact not in contacts:
+                contact.communities = Community.query.join(Contact,Community.contacts).filter_by(id=contact.id)
+                contacts.add(contact)
+    return render_template('contact/list.html',
+                           contacts=contacts,
+                           admin=current_user.admin)
+
+
 @app.route('/logout')
 def logout():
     logout_user()

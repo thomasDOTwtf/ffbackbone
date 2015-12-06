@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Backbone Admin Tool - Prefixes{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Your Communitiy Contacts</h1>
+</div>
+<div class="col-md-10">
+	<h3>Contact List</h3>
+	<table class="table table-striped">
+        <colgroup>
+            <col class="col-md-2">
+	    <col class="col-md-2">
+	    <col class="col-md-2">
+	    <col class="col-md-2">
+	    <col class="col-md-4">
+	    <col class="col-md-2">
+	</colgroup>
+	<tr>
+		<th>Nick</th>
+		<th>Lastname</th>
+		<th>Firstname</th>
+		<th>RIPE-Handle</th>
+		<th>Communities</th>
+		<th>Actions</th>
+	</tr>
+	{% for contact in contacts %}
+	<tr>
+        	<td> {{ contact.nickname }} </td>
+	        <td> {{ contact.lastname }} </td>
+		<td> {{ contact.firstname }} </td>
+		<td> <a target="_blank" href="https://apps.db.ripe.net/search/query.html?searchtext={{ contact.handle }}&bflag=true&rflag=true&source=RIPE#resultsAnchor">{{ contact.handle }}</a></td>
+		<td> 
+			<ul>
+			{% for community in contact.communities %}
+				<li>{{ community.name }}</li>
+			{% endfor %}
+			</ul>
+		</td>
+		{% if admin %}
+		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('contact', contact_id=contact.id) }}">Edit</a><a href="/contacts" class="btn btn-danger btn-sm active">Delete</a></td>
+		{% endif %}
+                {% if not admin %}
+                <td><a class="btn btn-primary btn-sm disabled" href="{{ url_for('contact', contact_id=contact.id) }}">Edit</a><a href="/contacts" class="btn btn-danger btn-sm disabled">Delete</a></td>
+                {% endif %}
+
+	</tr>
+	{% endfor %}
+	</table>
+</div>
+{% endblock %}
