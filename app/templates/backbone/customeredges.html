@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Backbone Admin Tool - CEs{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Your Communities Customer Edges</h1>
+</div>
+<div class="col-md-12">
+	<table class="table table-striped">
+        <colgroup>
+            <col class="col-md-2">
+	    <col class="col-md-2">
+	    <col class="col-md-2">
+	    <col class="col-md-2">
+	    <col class="col-md-2">
+	    <col class="col-md-2">
+	</colgroup>
+	<tr>
+		<th>Name</th>
+		<th>FQDN</th>
+		<th>IPv4</th>
+		<th>IPv6</th>
+		<th>Community</th>
+		<th>Actions</th>
+	</tr>
+	{% for ce in customeredges %}
+	<tr>
+        	<td> {{ ce.name }} </td>
+	        <td> {{ ce.fqdn }} </td>
+		<td> {{ ce.ipv4 }} </td>
+		<td> {{ ce.ipv6 }} </td>
+		<td> {{ ce.community.name }} </td>
+		<td>&nbsp;</td>
+	</tr>
+	{% endfor %}
+	<table>
+</div>
+{% endblock %}
