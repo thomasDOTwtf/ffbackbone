@@ -116,7 +116,8 @@ def password_reset(token):
 @app.route('/prefixes')
 @login_required
 def prefixes():
-    prefixes = Prefix.query.join(Contact, Prefix.contacts).filter_by(id=current_user.id)  # noqa
+    community = Community.query.join(Contact,Community.contacts).filter_by(id=current_user.id).one()
+    prefixes = Prefix.query.filter_by(community_id=community.id)  # noqa
     if prefixes.count() == 0:
         flash('No prefixes are currently assigned to you.')  # noqa
         return redirect(url_for('index'))
