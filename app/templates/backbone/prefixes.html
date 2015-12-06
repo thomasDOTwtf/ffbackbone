@@ -27,7 +27,7 @@
 		<td>
 			<ul>	
 			{% for contact in prefix.contacts %} 
-				<li>{{ contact.lastname }}, {{ contact.firstname }} [{{ contact.handle }}] </li>
+			<li><a href="{{ url_for('contact', contact_id=contact.id) }}">{{ contact.lastname }}, {{ contact.firstname }} [{{ contact.handle }}]</a> </li>
 			{% endfor %}
 			</ul>
 		</td>
