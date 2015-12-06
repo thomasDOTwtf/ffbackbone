@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Backbone Admin Tool - Contact{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Edit Contact</h1>
+</div>
+<script>
+$(document).ready(function(){
+		    $('[data-toggle="tooltip"]').tooltip(); 
+		    });
+</script>
+<div class="col-md-7">
+	<form class="form-horizontal" role="form">
+		<h3>General Information</h3>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="email">Firstname:</label>
+			<div class="col-sm-10">
+				<input type="name" class="form-control" id="firstname" value="{{ contact.firstname }}">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="pwd">Lastname:</label>
+			<div class="col-sm-10"> 
+				<input type="name" class="form-control" id="lastname" value="{{ contact.lastname }}">
+			</div>
+		</div>
+                <div class="form-group">
+                        <label class="control-label col-sm-2" for="pwd">E-Mail:</label>
+                        <div class="col-sm-10">
+                                <input type="email" class="form-control" id="mail" placeholder="E-Mail" value="{{ contact.mail }}">
+                        </div>
+                </div>
+                <div class="form-group">
+                        <label class="control-label col-sm-2" for="pwd">XMPP:</label>
+                        <div class="col-sm-10">
+                                <input type="email" class="form-control" id="xmpp" placeholder="XMPP" value="{{ contact.xmpp }}">
+                        </div>
+                </div>
+                <div class="form-group">
+                        <label class="control-label col-sm-2" for="pwd">Nickname:</label>
+                        <div class="col-sm-10">
+                                <input type="name" class="form-control" id="nickname" placeholder="Nicname" value="{{ contact.nickname }}">
+                        </div>
+		</div><br>
+		<h3>RIPE-Database</h3>
+                <div class="form-group">
+                        <label class="control-label col-sm-2" for="pwd">RIPE-Handle:</label>
+                        <div class="col-sm-10">
+                                <input type="name" class="form-control" id="handle" placeholder="RIPE-Handle" value="{{ contact.handle }}">
+                        </div>
+		</div><br>
+		<h3>Portal-Access</h3>
+                <div class="form-group">
+                        <label class="control-label col-sm-2" for="pwd">Login:</label>
+                        <div class="col-sm-10">
+                                <input type="name" class="form-control" id="login" placeholder="Login" value="{{ contact.login }}">
+                        </div>
+                </div>
+                <div class="form-group">
+                        <label class="control-label col-sm-2" for="pwd">Password:</label>
+                        <div class="col-sm-10">
+                                <input type="password" class="form-control" id="handle" placeholder="Password" value="##--OLD--##">
+                        </div>
+                </div>
+		<div class="form-group"> 
+			<div class="col-sm-offset-2 col-sm-10">
+				<div class="checkbox">
+					<label><input type="checkbox"> <a href="#" data-toggle="tooltip" title="Enables User to create new Contacts and Delete Contacts">Community Admin</a></label>
+				</div>
+			</div>
+		</div>
+		<div class="form-group"> 
+			<div class="col-sm-offset-2 col-sm-10">
+				<button type="submit" class="btn btn-success">Submit</button>
+				<button type="button" class="btn btn-danger">Back</button>
+			</div>
+		</div>
+	</form>	
+</div>
+{% endblock %}
