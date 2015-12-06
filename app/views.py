@@ -116,7 +116,7 @@ def password_reset(token):
 @app.route('/prefixes')
 @login_required
 def prefixes():
-    community = Community.query.join(Contact, Community.contacts).filter_by(id=current_user.id).one()
+    community = Community.query.join(Contact, Community.contacts).filter_by(id=current_user.id).first_or_404()
     prefixes = Prefix.query.filter_by(community_id=community.id).options(db.joinedload('contacts'))
     if prefixes.count() == 0:
         flash('No prefixes are currently assigned to you.')  # noqa
@@ -128,13 +128,13 @@ def prefixes():
 @app.route('/contact/<contact_id>')
 @login_required
 def contact(contact_id):
+    contact = Contact.query.filter_by(id=contact_id).first_or_404()
     community = Community.query.join(Contact, Community.contacts).filter_by(id=current_user.id).one()
-    prefixes = Prefix.query.filter_by(community_id=community.id).options(db.joinedload('contacts'))
-    if prefixes.count() == 0:
+    if 0:
         flash('No prefixes are currently assigned to you.')  # noqa
         return redirect(url_for('index'))
-    return render_template('backbone/prefixes.html',
-                           prefixes=prefixes)
+    return render_template('contact/detail.html',
+                           contact=contact)
 
 
 @app.route('/logout')
