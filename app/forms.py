@@ -3,11 +3,13 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import Required, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
 
+
 class LoginForm(Form):
     email = StringField('Login', validators=[Required(), Length(1, 64)])
     password = PasswordField('Password', validators=[Required()])
     remember_me = BooleanField('Keep me logged in')
     submit = SubmitField('Log In')
+
 
 class ChangePasswordForm(Form):
     old_password = PasswordField('Old password', validators=[Required()])
@@ -16,10 +18,12 @@ class ChangePasswordForm(Form):
     password2 = PasswordField('Confirm new password', validators=[Required()])
     submit = SubmitField('Update Password')
 
+
 class PasswordResetRequestForm(Form):
     email = StringField('Email', validators=[Required(), Length(1, 64),
                                              Email()])
     submit = SubmitField('Reset Password')
+
 
 class PasswordResetForm(Form):
     email = StringField('Email', validators=[Required(), Length(1, 64),
