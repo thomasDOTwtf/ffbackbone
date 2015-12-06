@@ -165,11 +165,31 @@ def contacts():
     for community_self in communities_self:
         for contact in community_self.contacts:
             if contact not in contacts:
-                contact.communities = Community.query.join(Contact,Community.contacts).filter_by(id=contact.id)
+                contact.communities = Community.query.join(
+                                Contact,
+                                Community.contacts
+                                ).filter_by(id=contact.id)
                 contacts.add(contact)
     return render_template('contact/list.html',
                            contacts=contacts,
                            admin=current_user.admin)
+
+
+@app.route('/customeredges')
+@login_required
+def customeredges():
+    communities_self = Community.query.join(
+            Contact,
+            Community.contacts
+            ).filter_by(id=current_user.id).options(db.joinedload('contacts'))
+    customeredges = set()
+    for community_self in communities_self:
+        for ce in community_self.ces:
+            if ce not in customeredges:
+                ce.community = community_self
+                customeredges.add(ce)
+    return render_template('backbone/customeredges.html',
+                           customeredges=customeredges)
 
 
 @app.route('/logout')

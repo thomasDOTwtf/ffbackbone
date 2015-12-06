@@ -7,7 +7,7 @@
 <div class="page-header">
     <h1>Your Communitiy Contacts</h1>
 </div>
-<div class="col-md-10">
+<div class="col-md-18">
 	<h3>Contact List</h3>
 	<table class="table table-striped">
         <colgroup>
@@ -15,8 +15,8 @@
 	    <col class="col-md-2">
 	    <col class="col-md-2">
 	    <col class="col-md-2">
-	    <col class="col-md-4">
 	    <col class="col-md-2">
+	    <col class="col-md-4">
 	</colgroup>
 	<tr>
 		<th>Nick</th>
@@ -40,10 +40,10 @@
 			</ul>
 		</td>
 		{% if admin %}
-		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('contact', contact_id=contact.id) }}">Edit</a><a href="/contacts" class="btn btn-danger btn-sm active">Delete</a></td>
+		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('contact', contact_id=contact.id) }}">Edit</a>&nbsp;<a href="/contacts" class="btn btn-danger btn-sm active">Delete</a></td>
 		{% endif %}
                 {% if not admin %}
-                <td><a class="btn btn-primary btn-sm disabled" href="{{ url_for('contact', contact_id=contact.id) }}">Edit</a><a href="/contacts" class="btn btn-danger btn-sm disabled">Delete</a></td>
+                <td><a class="btn btn-primary btn-sm disabled" href="{{ url_for('contact', contact_id=contact.id) }}">Edit</a>&nbsp;<a href="/contacts" class="btn btn-danger btn-sm disabled">Delete</a></td>
                 {% endif %}
 
 	</tr>
