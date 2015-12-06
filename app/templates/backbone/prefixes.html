@@ -7,16 +7,31 @@
 <div class="page-header">
     <h1>Assigned Prefixes</h1>
 </div>
-<div class="col-md-4">
-	<table class="table">
+<div class="col-md-7">
+	<table class="table table-striped">
+        <colgroup>
+            <col class="col-md-4">
+	    <col class="col-md-2">
+	    <col class="col-md-5">
+	</colgroup>
 	<tr>
 		<th>Prefix</th>
 		<th>IP-Version</th>
+		<th>Contacts</th>
+		<th>Actions</th>
 	</tr>
 	{% for prefix in prefixes %}
 	<tr>
         	<td> {{ prefix.prefix }} </td>
 	        <td> {{ prefix.version }} </td>
+		<td>
+			<ul>	
+			{% for contact in prefix.contacts %} 
+				<li>{{ contact.lastname }}, {{ contact.firstname }} [{{ contact.handle }}] </li>
+			{% endfor %}
+			</ul>
+		</td>
+		<td>&nbsp;</td>
 	</tr>
 	{% endfor %}
 	<table>
