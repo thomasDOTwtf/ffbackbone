@@ -1,8 +1,8 @@
 from app import app
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
-from flask import render_template, flash, redirect, session, url_for, request, g
-from flask.ext.login import login_user, logout_user, current_user, login_required
+from flask import render_template, flash, redirect, session, url_for, request, g  # noqa
+from flask.ext.login import login_user, logout_user, current_user, login_required  # noqa
 from flask import Flask, Response
 from flask.ext.login import LoginManager, UserMixin, login_required
 from flask_bootstrap import Bootstrap
@@ -27,16 +27,19 @@ admin.add_view(ModelView(PrefixType, db.session))
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return Contact.query.get(int(user_id))
 
 Bootstrap(app)
 
+
 @app.route('/')
 @app.route('/index')
 def index():
     return render_template('base.html', title='Home')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -49,12 +52,14 @@ def login():
         flash('Invalid username or password.')
     return render_template('auth/login.html', form=form)
 
+
 @app.route('/user/<login>')
 @login_required
 def user(login):
     user = User.query.filter_by(login=login).first_or_404()
     page = request.args.get('page', 1, type=int)
     return render_template('base.html')
+
 
 @app.route('/change-password', methods=['GET', 'POST'])
 @login_required
@@ -70,6 +75,7 @@ def change_password():
         else:
             flash('Invalid password.')
     return render_template("auth/change_password.html", form=form)
+
 
 @app.route('/reset', methods=['GET', 'POST'])
 def password_reset_request():
@@ -106,11 +112,24 @@ def password_reset(token):
             return redirect(url_for('index'))
     return render_template('auth/reset_password.html', form=form)
 
+
+@app.route('/prefixes')
+@login_required
+def prefixes():
+    prefixes = Prefix.query.join(Contact, Prefix.contacts).filter_by(id=current_user.id)  # noqa
+    if prefixes.count() is 0:
+        flash('No prefixes are currently assigned to  %s.' % current_user.community)  # noqa
+        return redirect(url_for('index'))
+    return render_template('backbone/prefixes.html',
+                           prefixes=prefixes)
+
+
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
-#@app.before_request
-#def before_request():
-#    g.user = current_user
+
+@app.before_request
+def before_request():
+    g.user = current_user
