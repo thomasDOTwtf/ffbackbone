@@ -117,8 +117,8 @@ def password_reset(token):
 @login_required
 def prefixes():
     prefixes = Prefix.query.join(Contact, Prefix.contacts).filter_by(id=current_user.id)  # noqa
-    if prefixes.count() is 0:
-        flash('No prefixes are currently assigned to  %s.' % current_user.community)  # noqa
+    if prefixes.count() == 0:
+        flash('No prefixes are currently assigned to you.')  # noqa
         return redirect(url_for('index'))
     return render_template('backbone/prefixes.html',
                            prefixes=prefixes)
