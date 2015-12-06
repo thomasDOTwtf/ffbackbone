@@ -146,12 +146,14 @@ def contact(contact_id):
     for community_self in communities_self:
         for community_edit in communities_edit:
             if community_edit.id == community_self.id:
+                community_self.selected = True
                 same = True
     if (current_user.admin is False and int(contact_id) != current_user.id) or (current_user.admin is True and same is False):  # noqa
         flash('You don''t have permissions to edit selected contact information')  # noqa
         return redirect(url_for('index'))
     return render_template('contact/detail.html',
-                           contact=contact)
+                           contact=contact,
+                           communities=communities_self)
 
 
 @app.route('/contacts')

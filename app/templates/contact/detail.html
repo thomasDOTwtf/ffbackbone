@@ -65,12 +65,26 @@ $(document).ready(function(){
                                 <input type="password" class="form-control" id="handle" placeholder="Password" value="##--OLD--##">
                         </div>
                 </div>
-		<div class="form-group"> 
-			<div class="col-sm-offset-2 col-sm-10">
-				<div class="checkbox">
-					<label><input type="checkbox"> <a href="#" data-toggle="tooltip" title="Enables User to create new Contacts and Delete Contacts">Community Admin</a></label>
-				</div>
-			</div>
+		<h3>Permissions</h3>
+                <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                                <div class="checkbox">
+                                        <label><input type="checkbox"> <a href="#" data-toggle="tooltip" title="Enables User to create new Contacts and Delete Contacts">Community Admin</a></label>
+                                </div>
+                        </div>
+                </div>
+		<div class="form-group">
+			<label for="sel1">Associated Communities:</label>
+				<select class="form-control" id="communities" multiple>
+					{% for community in communities %}	
+						{% if community.selected %}
+						<option id="{{ community.id }}" selected>{{community.name }}</option>
+						{% endif %}
+						{% if not community.selected %}
+	                                        <option id="{{ community.id }}">{{community.name }}</option>
+                                                {% endif %}
+					{% endfor %}
+				</select>
 		</div>
 		<div class="form-group"> 
 			<div class="col-sm-offset-2 col-sm-10">
