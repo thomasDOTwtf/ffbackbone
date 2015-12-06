@@ -16,12 +16,14 @@
 	    <col class="col-md-2">
 	    <col class="col-md-2">
 	    <col class="col-md-2">
+	    <col class="col-md-2">
 	</colgroup>
 	<tr>
 		<th>Name</th>
 		<th>FQDN</th>
 		<th>IPv4</th>
 		<th>IPv6</th>
+		<th>ASN</th>
 		<th>Community</th>
 		<th>Actions</th>
 	</tr>
@@ -31,6 +33,7 @@
 	        <td> {{ ce.fqdn }} </td>
 		<td> {{ ce.ipv4 }} </td>
 		<td> {{ ce.ipv6 }} </td>
+		<td> {{ ce.asn.asn }} </td>
 		<td> {{ ce.community.name }} </td>
 		<td>&nbsp;</td>
 	</tr>
