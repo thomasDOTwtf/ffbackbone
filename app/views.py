@@ -189,7 +189,7 @@ def customeredges():
         for ce in community_self.ces:
             if ce not in customeredges:
                 ce.community = community_self
-                ce.asn = AS.query.filter_by(id=ce.asn_id).first_or_404()
+                ce.asn = AS.query.filter_by(id=ce.asn_id).first()
                 customeredges.add(ce)
     return render_template('backbone/customeredges.html',
                            customeredges=customeredges)
