@@ -195,6 +195,22 @@ def customeredges():
                            customeredges=customeredges)
 
 
+@app.route('/communities')
+@login_required
+def communities():
+    communities_self = Community.query.join(
+            Contact,
+            Community.contacts
+            ).filter_by(id=current_user.id).options(db.joinedload('contacts'))
+    for community in communities_self:
+        community.isfirst = True
+        break
+    return render_template('communities.html',
+                           communities=communities_self,
+                           count=communities_self.count()
+                           )
+
+
 @app.route('/logout')
 def logout():
     logout_user()
