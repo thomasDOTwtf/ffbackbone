@@ -143,6 +143,28 @@ def prefix(prefix_id):
     return render_template('backbone/prefix.html')
 
 
+@app.route('/customeredge/<ce_id>')
+@login_required
+def customeredge(ce_id):
+    communities_self = Community.query.join(
+            Contact,
+            Community.contacts
+            ).filter_by(id=current_user.id).join(
+                    CustomerEdge,
+                    Community.ces).options(
+                            db.joinedload('ces')
+                            ).filter_by(id=ce_id)
+    if communities_self.count() == 0:
+        flash('You don''t belong to the CustomerEdge''s Community')  # noqa
+        return redirect(url_for('index'))
+    ce = CustomerEdge.query.filter_by(id=ce_id).options(db.joinedload('AS')).options(db.lazyload('Community')).first()
+    sessions = PeeringSession.query.filter_by(ce_id=ce.id).options(db.joinedload('TunnelType')).options(db.joinedload('ProviderEdge'))  #noqa
+    return render_template(
+            'backbone/customeredge.html',
+            ce=ce,
+            sessions=sessions)
+
+
 @app.route('/contact/<contact_id>')
 @login_required
 def contact(contact_id):
