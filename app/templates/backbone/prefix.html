@@ -63,5 +63,14 @@
 		{% endfor %}
 		<table>
 	</div>
+	<div class="form-group">
+		<label for="sel1">Select list:</label>
+		<select class="form-control" id="nameservers">
+			{% for ns in nameservers %}
+			<option id="{{ ns.id }}">{{ ns.fqdn }}</option>
+			{% endfor %}
+		</select>
+		<a href="/prefixes" class="btn btn-success btn-sm active">Add Nameserver</a>
+	</div>
 </div>
 {% endblock %}

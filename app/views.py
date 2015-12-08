@@ -140,8 +140,29 @@ def prefixes():
 @app.route('/prefix/<prefix_id>')
 @login_required
 def prefix(prefix_id):
-    prefix = Prefix.query.filter_by(id=prefix_id).options(db.subqueryload('nameservers')).options(db.subqueryload('contacts')).options(db.subqueryload('PrefixType')).options(db.subqueryload('Site')).options(db.subqueryload('Community')).first_or_404()
-    communities_self = Community.query.join(Contact, Community.contacts).filter_by(id=current_user.id)
+    prefix = Prefix.query.filter_by(id=prefix_id).options(
+            db.subqueryload('nameservers')
+            ).options(
+                    db.subqueryload('contacts')
+                    ).options(
+                            db.subqueryload('PrefixType')
+                            ).options(
+                                    db.subqueryload('Site')
+                                    ).options(
+                                            db.subqueryload('Community')
+                                            ).first_or_404()
+    community = Community.query.filter_by(id=prefix.community_id).join(
+            Contact,
+            Community.contacts
+            ).filter_by(id=current_user.id)
+    if community.count() == 0:
+        flash('You don''t belong to the Prefixes Community')  # noqa
+        return redirect(url_for('index'))
+
+    communities_self = Community.query.join(
+            Contact,
+            Community.contacts
+            ).filter_by(id=current_user.id)
     nameservers = set()
     for community in communities_self:
         for nameserver in community.nameservers:
