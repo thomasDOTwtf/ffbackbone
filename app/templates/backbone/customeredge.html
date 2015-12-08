@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Backbone Admin Tool - CEs{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+	<h1>Customer Edge - {{ ce.name }} </h1>
+</div>
+<div class="container">
+	<h3>Basic Information</h3>
+	<p>Find Basic Information below:</p>
+	FQDN: {{ ce.fqdn }} </br>
+	AS: {{ ce.AS.asn }} </br>
+	IPv4: {{ ce.ipv4 }} </br>
+	IPv6: {{ ce.ipv6 }} </br>
+</div>
+<div class="container">
+	<h3>Communities</h3>
+	<p>This CustomerEdge is visilble to following Communities:</p>
+	<ul>
+	{% for community in ce.Community %}
+		<li>{{ community.name }}</li>
+	{% endfor %}
+	</ul>
+</div>
+ <div class="container">
+                        <h3>Customer Edge Sessions</h3>
+                        <p>Following Sessionss are setup to your CE:</p>
+                        <table class="table table-striped">
+                                <thead>
+                                        <tr>
+                                                <th>ProviderEdge</th>
+                                                <th>PEv4</th>
+                                                <th>PEv6</th>
+                                                <th>CEv4</th>
+                                                <th>CEv6</th>
+						<th>Type</th>
+						<th>Enabled</th>
+                                                </tr>
+                                </thead>
+                                <tbody>
+                                        {% for session in ce.sessions %}
+                                        <tr>
+                                                <td>{{ session.ProviderEdge.name  }}</td>
+                                                <td>{{ session.pe_v4 }}</td>
+                                                <td>{{ session.pe_v6 }}</td>
+						<td>{{ session.ce_v4 }}</td>
+						<td>{{ session.ce_v4 }}</td>
+						<td>{{ session.TunnelType.name }}</td>
+                                                {% if session.enabled %}
+                                                <td><span class="glyphicon glyphicon-ok-circle"></span></td>
+                                                {% else %}
+                                                <td><span class="glyphicon glyphicon-ban-circle"></span></td>
+                                                {% endif %}
+                                                <td>&nbsp;</td>
+                                        </tr>
+                                        {% endfor %}
+                                </tbody>
+                        </table>
+                </div>
+
+{% endblock %}
