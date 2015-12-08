@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Backbone Admin Tool - Prefix{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Prefix Details - {{ prefix.prefix}} (IPv{{ prefix.version}})</h1>
+</div>
+<div class="container">
+	<h3>General Details</h3>
+	<p>Prefix-Type: {{ prefix.PrefixType.name }}</p>
+	<p>Site: {{ prefix.Site.name }}</p>
+	<p>Community: {{ prefix.Community.name }} </p>
+</div>
+<div class="container">
+	<h3>Contacts</h3>
+	<div class="col-md-11">
+		<table class="table table-striped">
+		<colgroup>
+			<col class="col-md-2">
+			<col class="col-md-2">
+			<col class="col-md-2">
+			<col class="col-md-2">
+			<col class="col-md-1">
+		</colgroup>
+		<tr>
+			<th>Nickname</th>
+			<th>Lastname</th>
+			<th>Firstname</th>
+			<th>RIPE-Handle</th>
+			<th>Actions</th>
+		</tr>
+		{% for contact in prefix.contacts %}
+		<tr>
+			<td>{{ contact.nickname }}</td>
+		        <td>{{ contact.lastname }}</td>
+			<td>{{ contact.firstname }}</td>
+			<td>{{ contact.handle }}</td>
+			<td><a href="/prefixes" class="btn btn-danger btn-sm active">Delete</a></td>
+		</tr>
+		{% endfor %}
+		</table>
+	</div>
+</div>
+<div class="container">	
+	<h3> Prefix Name Servers</h3>
+	<div class="col-md-8">
+		<table class="table table-striped">
+        	<colgroup>
+	            <col class="col-md-8">
+		    <col class="col-md-1">
+		</colgroup>
+		<tr>
+			<th>FQDN</th>
+			<th>Actions</th>
+		</tr>
+		{% for ns in prefix.nameservers %}
+		<tr>
+	        	<td> {{ ns.fqdn }} </td>
+			<td><a href="/prefixes" class="btn btn-danger btn-sm active">Delete</a></td>
+		</tr>
+		{% endfor %}
+		<table>
+	</div>
+</div>
+{% endblock %}
