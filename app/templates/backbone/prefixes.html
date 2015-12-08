@@ -7,19 +7,23 @@
 <div class="page-header">
     <h1>Assigned Prefixes</h1>
 </div>
-<div class="col-md-10">
+<div class="col-md-15">
 	<table class="table table-striped">
         <colgroup>
-            <col class="col-md-2">
+            <col class="col-md-1">
+	    <col class="col-md-1">
 	    <col class="col-md-2">
-	    <col class="col-md-4">
+	    <col class="col-md-1">
 	    <col class="col-md-2">
+	    <col class="col-md-3">
+	    <col class="col-md-5">
 	</colgroup>
 	<tr>
 		<th>Prefix</th>
 		<th>IP-Version</th>
 		<th>Type</th>
 		<th>Site</th>
+		<th>NameServers</th>
 		<th>Contacts</th>
 		<th>Actions</th>
 	</tr>
@@ -27,12 +31,12 @@
 	<tr>
         	<td> {{ prefix.prefix }} </td>
 	        <td> {{ prefix.version }} </td>
-		<td> {{ prefix.PrefixType }} </td>
-		<td> {{ prefix.site }} </td>
+		<td> {{ prefix.PrefixType.name }} </td>
+		<td> {{ prefix.Site.name }} </td>
 		<td>
 			<ul>	
 			{% for ns in prefix.nameservers %} 
-			<li>{{ ns.fqdn }}]</a> </li>
+			<li>{{ ns.fqdn }}</a> </li>
 			{% endfor %}
 			</ul>
 		</td>
@@ -43,7 +47,7 @@
                         {% endfor %}
                         </ul>
                 </td>	
-		<td>&nbsp;</td>
+		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('prefix', prefix_id=prefix.id) }}">Edit</a>&nbsp;<a href="/prefixes" class="btn btn-danger btn-sm active">Delete</a></td>
 	</tr>
 	{% endfor %}
 	<table>

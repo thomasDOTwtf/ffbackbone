@@ -137,8 +137,13 @@ def prefixes():
                            prefixes=prefixes)
 
 
-@app.route('/contact/<contact_id>')
+@app.route('/prefix/<prefix_id>')
+@login_required
+def prefix(prefix_id):
+    return render_template('backbone/prefix.html')
 
+
+@app.route('/contact/<contact_id>')
 @login_required
 def contact(contact_id):
     contact = Contact.query.filter_by(id=contact_id).first_or_404()
