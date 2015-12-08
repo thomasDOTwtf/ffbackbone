@@ -35,17 +35,69 @@ $(document).ready(function(){
 	<div id="{{ community.id }}" class="tab-pane fade in">
 	{% endif %}
 		<h3>{{ community.name }}</h3>
-		<div class="form-group">
-			<label for="usr">Name:</label>
-			<input type="text" class="form-control" id="usr" value="{{ community.name }}">
+		<div class="container">
+			<div class="form-group">
+				<label for="usr">Name:</label>
+				<input type="text" class="form-control" id="usr" value="{{ community.name }}">
+			</div>
+			<div class="form-group">
+                	        <label for="usr">Shortname:</label>
+                        	<input type="text" class="form-control" id="usr" value="{{ community.short }}">
+	                </div>
+			<div class="form-group">
+                	        <label for="usr">Created:</label>
+                        	<input type="text" class="form-control" id="usr" value="{{ community.created }}" disabled>
+	                </div>
 		</div>
-		<div class="form-group">
-                        <label for="usr">Shortname:</label>
-                        <input type="text" class="form-control" id="usr" value="{{ community.short }}">
-                </div>
-		<div class="form-group">
-                        <label for="usr">Created:</label>
-                        <input type="text" class="form-control" id="usr" value="{{ community.created }}" disabled>
+		<div class="container">
+			<h3>Communities ASNs</h3>
+			<p>Following ASNs are operated by your community:</p>            
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>ASN</th>
+						<th>Name</th>
+						<th>Description</th>
+						<th>Approved</th>
+						<th>Actions</th>
+						</tr>
+				</thead>
+				<tbody>
+					{% for asn in community.asns %}
+					<tr>
+						<td>{{ asn.asn }}</td>
+						<td>{{ asn.name }}</td>
+						<td>{{ asn.descr }}</td>
+						{% if asn.approved >= asn.changed %}
+						<td><span class="glyphicon glyphicon-ok-circle"></span></td>
+						{% else %}
+						<td><span class="glyphicon glyphicon-ban-circle"></span></td>
+						{% endif %}
+						<td>&nbsp;</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+                <div class="container">
+                        <h3>Communities Nameservers</h3>
+                        <p>Following Nameservers are operated by your community:</p>
+                        <table class="table table-striped">
+                                <thead>
+                                        <tr>
+                                                <th>FQDN</th>
+						<th>Actions</th>
+                                        </tr>
+                                </thead>
+                                <tbody>
+                                        {% for ns in community.nameservers %}
+                                        <tr>
+                                                <td>{{ ns.fqdn }}</td>
+						<td>&nbsp;</td>
+                                        </tr>
+                                        {% endfor %}
+                                </tbody>
+                        </table>
                 </div>
 	</div>
 	{% endfor %}

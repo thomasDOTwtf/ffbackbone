@@ -10,6 +10,7 @@ from flask_bootstrap import Bootstrap
 from app.models import *
 from app.forms import *
 from app.email import *
+import pprint
 
 admin = Admin(app)
 admin.add_view(ModelView(Community, db.session))
@@ -122,7 +123,13 @@ def prefixes():
             ).filter_by(id=current_user.id).first_or_404()
     prefixes = Prefix.query.filter_by(
             community_id=community.id
-            ).options(db.joinedload('contacts'))
+            ).options(
+                    db.joinedload('nameservers')
+                    ).options(
+                            db.joinedload('contacts')
+                            ).options(
+                                    db.subqueryload('PrefixType')
+                                    ).options(db.subqueryload('Site'))
     if prefixes.count() == 0:
         flash('No prefixes are currently assigned to you.')  # noqa
         return redirect(url_for('index'))
@@ -131,6 +138,7 @@ def prefixes():
 
 
 @app.route('/contact/<contact_id>')
+
 @login_required
 def contact(contact_id):
     contact = Contact.query.filter_by(id=contact_id).first_or_404()
@@ -201,7 +209,7 @@ def communities():
     communities_self = Community.query.join(
             Contact,
             Community.contacts
-            ).filter_by(id=current_user.id).options(db.joinedload('contacts'))
+            ).options(db.joinedload('asns')).options(db.lazyload('nameservers')).filter_by(id=current_user.id).options(db.joinedload('contacts'))
     for community in communities_self:
         community.isfirst = True
         break

@@ -18,6 +18,8 @@
 	<tr>
 		<th>Prefix</th>
 		<th>IP-Version</th>
+		<th>Type</th>
+		<th>Site</th>
 		<th>Contacts</th>
 		<th>Actions</th>
 	</tr>
@@ -25,13 +27,22 @@
 	<tr>
         	<td> {{ prefix.prefix }} </td>
 	        <td> {{ prefix.version }} </td>
+		<td> {{ prefix.PrefixType }} </td>
+		<td> {{ prefix.site }} </td>
 		<td>
 			<ul>	
-			{% for contact in prefix.contacts %} 
-			<li><a href="{{ url_for('contact', contact_id=contact.id) }}">{{ contact.lastname }}, {{ contact.firstname }} [{{ contact.handle }}]</a> </li>
+			{% for ns in prefix.nameservers %} 
+			<li>{{ ns.fqdn }}]</a> </li>
 			{% endfor %}
 			</ul>
 		</td>
+		<td>
+		        <ul>
+                        {% for contact in prefix.contacts %}
+                        <li><a href="{{ url_for('contact', contact_id=contact.id) }}">{{ contact.lastname }}, {{ contact.firstname }} [{{ contact.handle }}]</a> </li>
+                        {% endfor %}
+                        </ul>
+                </td>	
 		<td>&nbsp;</td>
 	</tr>
 	{% endfor %}
