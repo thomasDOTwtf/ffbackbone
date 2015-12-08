@@ -140,7 +140,17 @@ def prefixes():
 @app.route('/prefix/<prefix_id>')
 @login_required
 def prefix(prefix_id):
-    return render_template('backbone/prefix.html')
+    prefix = Prefix.query.filter_by(id=prefix_id).options(db.subqueryload('nameservers')).options(db.subqueryload('contacts')).options(db.subqueryload('PrefixType')).options(db.subqueryload('Site')).options(db.subqueryload('Community')).first_or_404()
+    communities_self = Community.query.join(Contact, Community.contacts).filter_by(id=current_user.id)
+    nameservers = set()
+    for community in communities_self:
+        for nameserver in community.nameservers:
+            if nameserver not in nameservers:
+                nameservers.add(nameserver)
+    return render_template(
+            'backbone/prefix.html',
+            prefix=prefix,
+            nameservers=nameservers)
 
 
 @app.route('/customeredge/<ce_id>')
