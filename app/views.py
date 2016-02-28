@@ -188,8 +188,10 @@ def customeredge(ce_id):
     if communities_self.count() == 0:
         flash('You don''t belong to the CustomerEdge''s Community')  # noqa
         return redirect(url_for('index'))
-    ce = CustomerEdge.query.filter_by(id=ce_id).options(db.joinedload('AS')).options(db.lazyload('Community')).first()
-    sessions = PeeringSession.query.filter_by(ce_id=ce.id).options(db.joinedload('TunnelType')).options(db.joinedload('ProviderEdge'))  #noqa
+    ce = CustomerEdge.query.filter_by(id=ce_id).options(
+            db.joinedload('AS')).options(db.lazyload('Community')).first()
+    sessions = PeeringSession.query.filter_by(ce_id=ce.id).options(
+            db.joinedload('TunnelType')).options(db.joinedload('ProviderEdge'))
     return render_template(
             'backbone/customeredge.html',
             ce=ce,
@@ -267,7 +269,10 @@ def communities():
     communities_self = Community.query.join(
             Contact,
             Community.contacts
-            ).options(db.joinedload('asns')).options(db.lazyload('nameservers')).filter_by(id=current_user.id).options(db.joinedload('contacts'))
+            ).options(db.joinedload('asns')).options(
+                    db.lazyload('nameservers')
+                    ).filter_by(id=current_user.id).options(
+                            db.joinedload('contacts'))
     for community in communities_self:
         community.isfirst = True
         break
