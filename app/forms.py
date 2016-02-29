@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
-from wtforms.ext.sqlalchemy.fields import QuerySelectField
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms.ext.sqlalchemy.fields import QuerySelectField,QuerySelectMultipleField
+from wtforms import IntegerField,StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import Required, Length, Email, Regexp, EqualTo, IPAddress  # noqa
 from wtforms import ValidationError
 
@@ -52,4 +52,12 @@ class CreateCustomerEdge(Form):
     ipv6 = StringField(
             'IPv6',
             validators=[Required(), IPAddress(ipv6=True, ipv4=False)])
+    submit = SubmitField('Create CE')
+
+
+class CreateAS(Form):
+    asn = IntegerField('ASN', validators=[Required()])
+    name = StringField('Name', validators=[Required(), Length(1, 16)])
+    descr = StringField('Description', validators=[Length(1, 255)])
+    community = QuerySelectMultipleField('Community', validators=[Required()])
     submit = SubmitField('Create CE')

@@ -68,7 +68,7 @@ $(document).ready(function(){
 						<td>{{ asn.asn }}</td>
 						<td>{{ asn.name }}</td>
 						<td>{{ asn.descr }}</td>
-						{% if asn.approved >= asn.changed %}
+						{% if asn.isapproved() %}
 						<td><span class="glyphicon glyphicon-ok-circle"></span></td>
 						{% else %}
 						<td><span class="glyphicon glyphicon-ban-circle"></span></td>

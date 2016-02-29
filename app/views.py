@@ -6,6 +6,7 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 from flask import Flask, Response
 from flask.ext.login import LoginManager, UserMixin, login_required
 from flask_bootstrap import Bootstrap
+from datetime import datetime
 
 from app.models import *
 from app.forms import *
@@ -284,6 +285,28 @@ def create_customeredge():
         return redirect(url_for('customeredges'))
     return render_template("backbone/customeredge-create.html", form=form)
 
+@app.route('/create/as', methods=['GET', 'POST'])
+@login_required
+def create_as():
+    form = CreateAS()
+    communities_self = Community.query.join(Community.contacts).filter(
+            Contact.id.like(current_user.id)).options(db.contains_eager(
+                Community.contacts))
+    form.community.query = communities_self
+    if form.validate_on_submit():
+        asn = AS()
+        asn.asn = form.asn.data
+        asn.name = form.name.data
+        asn.descr = form.descr.data
+        asn.created = datetime.now()
+        asn.changed = datetime.now()
+        db.session.add(asn)
+        for community in form.community.data:
+            community.asns.append(asn)
+        db.session.commit()
+        flash('Customer Edge has been created')
+        return redirect(url_for('communities'))
+    return render_template("backbone/as-create.html", form=form)
 
 @app.route('/communities')
 @login_required

@@ -3,8 +3,8 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Kennwort1@localhost/testdb?charset=utf8&use_unicode=0'  # noqa
-# noqa app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://testdb:testdb@localhost:5432/testdb'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Kennwort1@localhost/testdb?charset=utf8&use_unicode=0'  # noqa
+app.config['SQLALCHEMY_DATABASE_URI'] = r'sqlite:///c:\sql\sql.db'
 db = SQLAlchemy(app)
 
 CommunityCEs = db.Table(
@@ -135,6 +135,16 @@ class AS(db.Model):
             lazy='dynamic',
             uselist='False'
             )
+    def isapproved(self):
+        if self.approved is None:
+            return False
+        if self.created is None:
+            return False
+        if self.changed is None:
+            return False
+        if self.approved>=self.changed:
+            return True
+        return False
 
     def __repr__(self):
         return 'AS{self.asn}'.format(self=self)
