@@ -1,6 +1,7 @@
 from flask.ext.wtf import Form
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import Required, Length, Email, Regexp, EqualTo
+from wtforms.validators import Required, Length, Email, Regexp, EqualTo, IPAddress  # noqa
 from wtforms import ValidationError
 
 
@@ -36,3 +37,19 @@ class PasswordResetForm(Form):
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first() is None:
             raise ValidationError('Unknown email address.')
+
+
+class CreateCustomerEdge(Form):
+    shortname = StringField(
+            'Short Name',
+            validators=[Required(), Length(1, 16)])
+    community = QuerySelectField(
+            'Community',
+            validators=[Required()], get_label='name')
+    fqdn = StringField('FQDN', validators=[Required(), Length(1, 255)])
+    asn = QuerySelectField('ASN', validators=[Required()])
+    ipv4 = StringField('IPv4', validators=[Required(), IPAddress(ipv4=True)])
+    ipv6 = StringField(
+            'IPv6',
+            validators=[Required(), IPAddress(ipv6=True, ipv4=False)])
+    submit = SubmitField('Create CE')

@@ -248,19 +248,40 @@ def contacts():
 @app.route('/customeredges')
 @login_required
 def customeredges():
-    communities_self = Community.query.join(
-            Contact,
-            Community.contacts
-            ).filter_by(id=current_user.id).options(db.joinedload('contacts'))
-    customeredges = set()
-    for community_self in communities_self:
-        for ce in community_self.ces:
-            if ce not in customeredges:
-                ce.community = community_self
-                ce.asn = AS.query.filter_by(id=ce.asn_id).first()
-                customeredges.add(ce)
+    comm_subq = Community.query.join(Community.contacts).filter(
+            Contact.id.like(current_user.id)).options(db.contains_eager(
+                Community.contacts)).subquery()
+    customeredges = CustomerEdge.query.join(
+            comm_subq,
+            CustomerEdge.Community).options(db.joinedload('Community'))
     return render_template('backbone/customeredges.html',
                            customeredges=customeredges)
+
+
+@app.route('/create/customeredge', methods=['GET', 'POST'])
+@login_required
+def create_customeredge():
+    form = CreateCustomerEdge()
+    communities_self = Community.query.join(Community.contacts).filter(
+            Contact.id.like(current_user.id)).options(db.contains_eager(
+                Community.contacts))
+    comm_subq = Community.query.filter(
+            Community.contacts.contains(current_user)).subquery()
+    asns_self = AS.query.join(comm_subq, AS.Community)
+    form.community.query = communities_self
+    form.asn.query = asns_self
+    if form.validate_on_submit():
+        ce = CustomerEdge()
+        ce.name = form.shortname.data
+        ce.fqdn = form.fqdn.data
+        ce.ipv4 = form.ipv4.data
+        ce.ipv6 = form.ipv6.data
+        db.session.add(ce)
+        form.community.data.ces.append(ce)
+        db.session.commit()
+        flash('Customer Edge has been created')
+        return redirect(url_for('customeredges'))
+    return render_template("backbone/customeredge-create.html", form=form)
 
 
 @app.route('/communities')

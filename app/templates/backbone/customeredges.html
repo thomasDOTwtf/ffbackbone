@@ -33,12 +33,19 @@
 	        <td> {{ ce.fqdn }} </td>
 		<td> {{ ce.ipv4 }} </td>
 		<td> {{ ce.ipv6 }} </td>
-		<td> {{ ce.asn.asn }} </td>
-		<td> {{ ce.community.name }} </td>
+		<td> {{ ce.AS.name }} </td>
+		<td>
+			<ul>
+			{% for community in ce.Community %}
+				<li>{{ community.name }}</li>
+		        {% endfor %}
+			</ul>
+		</td>
 		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('customeredge', ce_id=ce.id) }}">Edit</a>&nbsp;<a href="/customeredges" class="btn btn-danger btn-sm active">Delete</a></td>
 
 	</tr>
 	{% endfor %}
-	<table>
+	<table></br></br>
+	<a class="btn btn-primary btn-sm active" href="{{ url_for('create_customeredge') }}">Create New Customer Edge</a>
 </div>
 {% endblock %}

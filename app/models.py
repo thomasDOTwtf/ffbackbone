@@ -57,7 +57,7 @@ class Community(db.Model):
     ces = db.relationship(
             'CustomerEdge',
             secondary=CommunityCEs,
-            backref=db.backref('Community', lazy='dynamic')
+            backref=db.backref('Community', lazy='joined')
             )
     asns = db.relationship(
             'AS',
