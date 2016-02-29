@@ -276,6 +276,7 @@ def create_customeredge():
         ce.fqdn = form.fqdn.data
         ce.ipv4 = form.ipv4.data
         ce.ipv6 = form.ipv6.data
+        ce.asn_id = form.asn.data.id
         db.session.add(ce)
         form.community.data.ces.append(ce)
         db.session.commit()
