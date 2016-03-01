@@ -181,6 +181,16 @@ class Contact(db.Model):
         Community.contacts.contains(self)).subquery()
         return Contact.query.join(comm_subq, Contact.Community)
 
+    def get_nameservers(self):
+        comm_subq = Community.query.filter(
+        Community.contacts.contains(self)).subquery()
+        return NameServer.query.join(comm_subq, NameServer.Community)
+
+    def get_customeredges(self):
+        comm_subq = Community.query.filter(
+        Community.contacts.contains(self)).subquery()
+        return CustomerEdge.query.join(comm_subq, CustomerEdge.Community)
+
     def is_authenticated(self):
         return True
 

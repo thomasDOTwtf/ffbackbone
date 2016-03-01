@@ -161,11 +161,7 @@ def prefix(prefix_id):
         flash('You don''t belong to the Prefixes Community')  # noqa
         return redirect(url_for('index'))
 
-    nameservers = set()
-    for community in current_user.get_communities():
-        for nameserver in community.nameservers:
-            if nameserver not in nameservers:
-                nameservers.add(nameserver)
+    nameservers = current_user.get_nameservers()
     return render_template(
         'backbone/prefix.html',
         prefix=prefix,
@@ -175,15 +171,8 @@ def prefix(prefix_id):
 @app.route('/customeredge/<ce_id>')
 @login_required
 def customeredge(ce_id):
-    communities_self = Community.query.join(
-        Contact,
-        Community.contacts
-    ).filter_by(id=current_user.id).join(
-        CustomerEdge,
-        Community.ces).options(
-        db.joinedload('ces')
-    ).filter_by(id=ce_id)
-    if communities_self.count() == 0:
+    customeredges = current_user.get_customeredges().filter_by(id=ce_id)
+    if customeredges.count() == 0:
         flash('You don''t belong to the CustomerEdge''s Community')  # noqa
         return redirect(url_for('index'))
     ce = CustomerEdge.query.filter_by(id=ce_id).options(
@@ -234,15 +223,8 @@ def contacts():
 @app.route('/customeredges')
 @login_required
 def customeredges():
-    comm_subq = Community.query.join(Community.contacts).filter(
-        Contact.id.like(current_user.id)).options(
-            db.contains_eager(Community.contacts)
-            ).subquery()
-    customeredges = CustomerEdge.query.join(
-        comm_subq,
-        CustomerEdge.Community).options(db.joinedload('Community'))
     return render_template('backbone/customeredges.html',
-                           customeredges=customeredges)
+                           customeredges=current_user.get_customeredges())
 
 
 @app.route('/create/customeredge', methods=['GET', 'POST'])
