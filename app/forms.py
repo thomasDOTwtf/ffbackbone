@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
-from wtforms import IntegerField, StringField, PasswordField, BooleanField, SubmitField, SelectMultipleField
+from wtforms import IntegerField, StringField, PasswordField, BooleanField, SubmitField, SelectMultipleField, HiddenField
 from wtforms.validators import Required, Length, Email, Regexp, EqualTo, IPAddress  # noqa
 from wtforms import ValidationError
 
@@ -56,6 +56,7 @@ class CreateCustomerEdge(Form):
 
 
 class FormAS(Form):
+    edit = HiddenField()
     asn = IntegerField('ASN', validators=[Required()])
     name = StringField('Name', validators=[Required(), Length(1, 16)])
     descr = StringField('Description', validators=[Length(1, 255)])

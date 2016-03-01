@@ -161,12 +161,8 @@ def prefix(prefix_id):
         flash('You don''t belong to the Prefixes Community')  # noqa
         return redirect(url_for('index'))
 
-    communities_self = Community.query.join(
-        Contact,
-        Community.contacts
-    ).filter_by(id=current_user.id)
     nameservers = set()
-    for community in communities_self:
+    for community in current_user.get_communities():
         for nameserver in community.nameservers:
             if nameserver not in nameservers:
                 nameservers.add(nameserver)
@@ -230,21 +226,8 @@ def contact(contact_id):
 @app.route('/contacts')
 @login_required
 def contacts():
-    communities_self = Community.query.join(
-        Contact,
-        Community.contacts
-    ).filter_by(id=current_user.id).options(db.joinedload('contacts'))
-    contacts = set()
-    for community_self in communities_self:
-        for contact in community_self.contacts:
-            if contact not in contacts:
-                contact.communities = Community.query.join(
-                    Contact,
-                    Community.contacts
-                ).filter_by(id=contact.id)
-                contacts.add(contact)
     return render_template('contact/list.html',
-                           contacts=contacts,
+                           contacts=current_user.get_contacts(),
                            admin=current_user.admin)
 
 
@@ -266,15 +249,8 @@ def customeredges():
 @login_required
 def create_customeredge():
     form = CreateCustomerEdge()
-    communities_self = Community.query.join(Community.contacts).filter(
-        Contact.id.like(current_user.id)).options(
-            db.contains_eager(Community.contacts)
-            )
-    comm_subq = Community.query.filter(
-        Community.contacts.contains(current_user)).subquery()
-    asns_self = AS.query.join(comm_subq, AS.Community)
-    form.community.query = communities_self
-    form.asn.query = asns_self
+    form.community.query = current_user.get_communities()
+    form.asn.query = current_user.get_asns()
     if form.validate_on_submit():
         ce = CustomerEdge()
         ce.name = form.shortname.data
@@ -294,16 +270,10 @@ def create_customeredge():
 @login_required
 def create_as():
     form = FormAS()
-    communities_self = Community.query.join(Community.contacts).filter(
-        Contact.id.like(current_user.id)).options(
-            db.contains_eager(Community.contacts)
-            )
-    form.community.query = communities_self
+    form.community.query = current_user.get_communities()
     if form.validate_on_submit():
         asn = AS()
-        asn.asn = form.asn.data
-        asn.name = form.name.data
-        asn.descr = form.descr.data
+        form.populate_obj(asn)
         asn.created = datetime.now()
         asn.changed = datetime.now()
         db.session.add(asn)
@@ -324,14 +294,10 @@ def asn(asn_id):
     if this_asn is None:
         flash('Access denied!')
         return redirect(url_for('index'))
-    form = FormAS(obj=this_asn)
+    form = FormAS(obj=this_asn, edit=True)
     if this_asn.Community is not None:
         form.community.data = this_asn.Community
-    communities_self = Community.query.join(Community.contacts).filter(
-        Contact.id.like(current_user.id)).options(
-            db.contains_eager(Community.contacts)
-            )
-    form.community.query = communities_self
+    form.community.query = current_user.get_communities()
     if form.validate_on_submit():
         form.populate_obj(this_asn)
         this_asn.changed = datetime.now()
@@ -358,7 +324,6 @@ def communities():
                            communities=communities_self,
                            count=communities_self.count()
                            )
-
 
 @app.route('/logout')
 def logout():

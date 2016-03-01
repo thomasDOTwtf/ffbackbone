@@ -165,6 +165,22 @@ class Contact(db.Model):
     def __repr__(self):
         return '{self.nickname} ({self.mail})'.format(self=self)
 
+    def get_communities(self):
+        return Community.query.join(Community.contacts).filter(
+        Contact.id.like(self.id)).options(
+            db.contains_eager(Community.contacts)
+            )
+
+    def get_asns(self):
+        comm_subq = Community.query.filter(
+        Community.contacts.contains(self)).subquery()
+        return AS.query.join(comm_subq, AS.Community)
+
+    def get_contacts(self):
+        comm_subq = Community.query.filter(
+        Community.contacts.contains(self)).subquery()
+        return Contact.query.join(comm_subq, Contact.Community)
+
     def is_authenticated(self):
         return True
 
