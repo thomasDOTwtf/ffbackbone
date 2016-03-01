@@ -119,7 +119,7 @@ def password_reset(token):
     return render_template('auth/reset_password.html', form=form)
 
 
-@app.route('/prefixes')
+@app.route('/prefix')
 @login_required
 def prefixes():
     community = Community.query.join(
@@ -188,14 +188,14 @@ def customeredge(ce_id):
         sessions=sessions)
 
 
-@app.route('/customeredges')
+@app.route('/customeredge')
 @login_required
 def customeredges():
     return render_template('backbone/customeredges.html',
                            customeredges=current_user.get_customeredges())
 
 
-@app.route('/create/customeredge', methods=['GET', 'POST'])
+@app.route('/customeredge/create', methods=['GET', 'POST'])
 @login_required
 def create_customeredge():
     form = CreateCustomerEdge()
@@ -216,7 +216,7 @@ def create_customeredge():
     return render_template("backbone/customeredge-create.html", form=form)
 
 
-@app.route('/communities')
+@app.route('/community')
 @login_required
 def communities():
     communities_self = Community.query.join(

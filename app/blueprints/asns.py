@@ -57,7 +57,7 @@ def edit(asn_id):
     return render_template("as/detail.html", form=form)
 
 
-@asns.route('/asns')
+@asns.route('/asn')
 @login_required
 def list():
     return render_template("as/list.html",asns=current_user.get_asns())

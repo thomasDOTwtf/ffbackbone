@@ -7,7 +7,7 @@ from app.models import *
 contacts = Blueprint('contacts', __name__, template_folder='templates')
 
 
-@contacts.route('/contacts')
+@contacts.route('/contact')
 @login_required
 def list():
     return render_template('contact/list.html',
