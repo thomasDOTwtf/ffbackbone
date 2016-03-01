@@ -45,10 +45,10 @@
 			{% endfor %}
 			</ul>
 		</td>
-		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('asn_edit', asn_id=asn.id) }}">Edit</a>&nbsp;<a href="{{ url_for('asn_delete', asn_id=asn.id) }}" class="btn btn-danger btn-sm active">Delete</a></td>
+		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('asns.edit', asn_id=asn.id) }}">Edit</a>&nbsp;<a href="{{ url_for('asns.delete', asn_id=asn.id) }}" class="btn btn-danger btn-sm active">Delete</a></td>
 	</tr>
 	{% endfor %}
 	</table></br></br>
-	<a class="btn btn-primary btn-sm active" href="{{ url_for('asn_create') }}">Create New ASN</a>
+	<a class="btn btn-primary btn-sm active" href="{{ url_for('asns.create') }}">Create New ASN</a>
 </div>
 {% endblock %}

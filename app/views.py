@@ -8,6 +8,7 @@ from flask.ext.login import LoginManager, UserMixin, login_required
 from flask_bootstrap import Bootstrap
 from datetime import datetime
 from app.blueprints.contacts import contacts
+from app.blueprints.asns import asns
 from app.models import *
 from app.forms import *
 from app.email import *
@@ -37,6 +38,7 @@ def load_user(user_id):
 
 Bootstrap(app)
 app.register_blueprint(contacts)
+app.register_blueprint(asns)
 
 
 @app.route('/')
@@ -212,62 +214,6 @@ def create_customeredge():
         flash('Customer Edge has been created')
         return redirect(url_for('customeredges'))
     return render_template("backbone/customeredge-create.html", form=form)
-
-
-@app.route('/asn/new', methods=['GET', 'POST'])
-@login_required
-def asn_create():
-    form = FormAS()
-    form.community.query = current_user.get_communities()
-    if form.validate_on_submit():
-        asn = AS()
-        form.populate_obj(asn)
-        asn.created = datetime.now()
-        asn.changed = datetime.now()
-        db.session.add(asn)
-        asn.Community = form.community.data
-        db.session.commit()
-        flash('Customer Edge has been created')
-        return redirect(url_for('asn_list'))
-    return render_template("as/detail.html", form=form)
-
-
-@app.route('/asn/delete/<asn_id>')
-@login_required
-def asn_delete(asn_id):
-    asn=AS.query.filter_by(id=asn_id)
-    asn.delete()
-    db.session.commit()
-    flash('AS deleted successfully!')
-    return redirect(url_for('asn_list'))
-
-
-@app.route('/asn/<asn_id>', methods=['GET', 'POST'])
-@login_required
-def asn_edit(asn_id):
-    comm_subq = Community.query.filter(
-        Community.contacts.contains(current_user)).subquery()
-    this_asn = AS.query.filter_by(id=asn_id).join(comm_subq, AS.Community).first()
-    if this_asn is None:
-        flash('Access denied!')
-        return redirect(url_for('index'))
-    form = FormAS(obj=this_asn, edit=True)
-    if this_asn.Community is not None:
-        form.community.data = this_asn.Community
-    form.community.query = current_user.get_communities()
-    if form.validate_on_submit():
-        form.populate_obj(this_asn)
-        this_asn.changed = datetime.now()
-        db.session.add(this_asn)
-        db.session.commit()
-        return redirect(url_for('asn_list'))
-    return render_template("as/detail.html", form=form)
-
-
-@app.route('/asns')
-@login_required
-def asn_list():
-    return render_template("as/list.html",asns=current_user.get_asns())
 
 
 @app.route('/communities')
