@@ -274,7 +274,7 @@ def create_customeredge():
 
 @app.route('/asn/new', methods=['GET', 'POST'])
 @login_required
-def create_as():
+def asn_create():
     form = FormAS()
     form.community.query = current_user.get_communities()
     if form.validate_on_submit():
@@ -286,13 +286,23 @@ def create_as():
         asn.Community = form.community.data
         db.session.commit()
         flash('Customer Edge has been created')
-        return redirect(url_for('communities'))
+        return redirect(url_for('asn_list'))
     return render_template("as/detail.html", form=form)
+
+
+@app.route('/asn/delete/<asn_id>')
+@login_required
+def asn_delete(asn_id):
+    asn=AS.query.filter_by(id=asn_id)
+    asn.delete()
+    db.session.commit()
+    flash('AS deleted successfully!')
+    return redirect(url_for('asn_list'))
 
 
 @app.route('/asn/<asn_id>', methods=['GET', 'POST'])
 @login_required
-def asn(asn_id):
+def asn_edit(asn_id):
     comm_subq = Community.query.filter(
         Community.contacts.contains(current_user)).subquery()
     this_asn = AS.query.filter_by(id=asn_id).join(comm_subq, AS.Community).first()
@@ -308,8 +318,14 @@ def asn(asn_id):
         this_asn.changed = datetime.now()
         db.session.add(this_asn)
         db.session.commit()
-        return redirect(url_for('communities'))
+        return redirect(url_for('asn_list'))
     return render_template("as/detail.html", form=form)
+
+
+@app.route('/asns')
+@login_required
+def asn_list():
+    return render_template("as/list.html",asns=current_user.get_asns())
 
 
 @app.route('/communities')
