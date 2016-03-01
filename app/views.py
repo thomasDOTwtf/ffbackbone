@@ -290,7 +290,7 @@ def create_customeredge():
     return render_template("backbone/customeredge-create.html", form=form)
 
 
-@app.route('/asn', methods=['GET', 'POST'])
+@app.route('/asn/new', methods=['GET', 'POST'])
 @login_required
 def create_as():
     form = FormAS()
