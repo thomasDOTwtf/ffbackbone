@@ -34,6 +34,7 @@ login_manager.init_app(app)
 def load_user(user_id):
     return Contact.query.get(int(user_id))
 
+
 Bootstrap(app)
 
 
@@ -119,18 +120,18 @@ def password_reset(token):
 @login_required
 def prefixes():
     community = Community.query.join(
-            Contact,
-            Community.contacts
-            ).filter_by(id=current_user.id).first_or_404()
+        Contact,
+        Community.contacts
+    ).filter_by(id=current_user.id).first_or_404()
     prefixes = Prefix.query.filter_by(
-            community_id=community.id
-            ).options(
-                    db.joinedload('nameservers')
-                    ).options(
-                            db.joinedload('contacts')
-                            ).options(
-                                    db.subqueryload('PrefixType')
-                                    ).options(db.subqueryload('Site'))
+        community_id=community.id
+    ).options(
+        db.joinedload('nameservers')
+    ).options(
+        db.joinedload('contacts')
+    ).options(
+        db.subqueryload('PrefixType')
+    ).options(db.subqueryload('Site'))
     if prefixes.count() == 0:
         flash('No prefixes are currently assigned to you.')  # noqa
         return redirect(url_for('index'))
@@ -142,61 +143,61 @@ def prefixes():
 @login_required
 def prefix(prefix_id):
     prefix = Prefix.query.filter_by(id=prefix_id).options(
-            db.subqueryload('nameservers')
-            ).options(
-                    db.subqueryload('contacts')
-                    ).options(
-                            db.subqueryload('PrefixType')
-                            ).options(
-                                    db.subqueryload('Site')
-                                    ).options(
-                                            db.subqueryload('Community')
-                                            ).first_or_404()
+        db.subqueryload('nameservers')
+    ).options(
+        db.subqueryload('contacts')
+    ).options(
+        db.subqueryload('PrefixType')
+    ).options(
+        db.subqueryload('Site')
+    ).options(
+        db.subqueryload('Community')
+    ).first_or_404()
     community = Community.query.filter_by(id=prefix.community_id).join(
-            Contact,
-            Community.contacts
-            ).filter_by(id=current_user.id)
+        Contact,
+        Community.contacts
+    ).filter_by(id=current_user.id)
     if community.count() == 0:
         flash('You don''t belong to the Prefixes Community')  # noqa
         return redirect(url_for('index'))
 
     communities_self = Community.query.join(
-            Contact,
-            Community.contacts
-            ).filter_by(id=current_user.id)
+        Contact,
+        Community.contacts
+    ).filter_by(id=current_user.id)
     nameservers = set()
     for community in communities_self:
         for nameserver in community.nameservers:
             if nameserver not in nameservers:
                 nameservers.add(nameserver)
     return render_template(
-            'backbone/prefix.html',
-            prefix=prefix,
-            nameservers=nameservers)
+        'backbone/prefix.html',
+        prefix=prefix,
+        nameservers=nameservers)
 
 
 @app.route('/customeredge/<ce_id>')
 @login_required
 def customeredge(ce_id):
     communities_self = Community.query.join(
-            Contact,
-            Community.contacts
-            ).filter_by(id=current_user.id).join(
-                    CustomerEdge,
-                    Community.ces).options(
-                            db.joinedload('ces')
-                            ).filter_by(id=ce_id)
+        Contact,
+        Community.contacts
+    ).filter_by(id=current_user.id).join(
+        CustomerEdge,
+        Community.ces).options(
+        db.joinedload('ces')
+    ).filter_by(id=ce_id)
     if communities_self.count() == 0:
         flash('You don''t belong to the CustomerEdge''s Community')  # noqa
         return redirect(url_for('index'))
     ce = CustomerEdge.query.filter_by(id=ce_id).options(
-            db.joinedload('AS')).options(db.lazyload('Community')).first()
+        db.joinedload('AS')).options(db.lazyload('Community')).first()
     sessions = PeeringSession.query.filter_by(ce_id=ce.id).options(
-            db.joinedload('TunnelType')).options(db.joinedload('ProviderEdge'))
+        db.joinedload('TunnelType')).options(db.joinedload('ProviderEdge'))
     return render_template(
-            'backbone/customeredge.html',
-            ce=ce,
-            sessions=sessions)
+        'backbone/customeredge.html',
+        ce=ce,
+        sessions=sessions)
 
 
 @app.route('/contact/<contact_id>')
@@ -204,20 +205,21 @@ def customeredge(ce_id):
 def contact(contact_id):
     contact = Contact.query.filter_by(id=contact_id).first_or_404()
     communities_self = Community.query.join(
-            Contact,
-            Community.contacts
-            ).filter_by(id=current_user.id)
+        Contact,
+        Community.contacts
+    ).filter_by(id=current_user.id)
     communities_edit = Community.query.join(
-            Contact,
-            Community.contacts
-            ).filter_by(id=contact_id)
+        Contact,
+        Community.contacts
+    ).filter_by(id=contact_id)
     same = False
     for community_self in communities_self:
         for community_edit in communities_edit:
             if community_edit.id == community_self.id:
                 community_self.selected = True
                 same = True
-    if (current_user.admin is False and int(contact_id) != current_user.id) or (current_user.admin is True and same is False):  # noqa
+    if (current_user.admin is False and int(contact_id) != current_user.id) or (
+                    current_user.admin is True and same is False):  # noqa
         flash('You don''t have permissions to edit selected contact information')  # noqa
         return redirect(url_for('index'))
     return render_template('contact/detail.html',
@@ -229,17 +231,17 @@ def contact(contact_id):
 @login_required
 def contacts():
     communities_self = Community.query.join(
-            Contact,
-            Community.contacts
-            ).filter_by(id=current_user.id).options(db.joinedload('contacts'))
+        Contact,
+        Community.contacts
+    ).filter_by(id=current_user.id).options(db.joinedload('contacts'))
     contacts = set()
     for community_self in communities_self:
         for contact in community_self.contacts:
             if contact not in contacts:
                 contact.communities = Community.query.join(
-                                Contact,
-                                Community.contacts
-                                ).filter_by(id=contact.id)
+                    Contact,
+                    Community.contacts
+                ).filter_by(id=contact.id)
                 contacts.add(contact)
     return render_template('contact/list.html',
                            contacts=contacts,
@@ -250,11 +252,12 @@ def contacts():
 @login_required
 def customeredges():
     comm_subq = Community.query.join(Community.contacts).filter(
-            Contact.id.like(current_user.id)).options(db.contains_eager(
-                Community.contacts)).subquery()
+        Contact.id.like(current_user.id)).options(
+            db.contains_eager(Community.contacts)
+            ).subquery()
     customeredges = CustomerEdge.query.join(
-            comm_subq,
-            CustomerEdge.Community).options(db.joinedload('Community'))
+        comm_subq,
+        CustomerEdge.Community).options(db.joinedload('Community'))
     return render_template('backbone/customeredges.html',
                            customeredges=customeredges)
 
@@ -264,10 +267,11 @@ def customeredges():
 def create_customeredge():
     form = CreateCustomerEdge()
     communities_self = Community.query.join(Community.contacts).filter(
-            Contact.id.like(current_user.id)).options(db.contains_eager(
-                Community.contacts))
+        Contact.id.like(current_user.id)).options(
+            db.contains_eager(Community.contacts)
+            )
     comm_subq = Community.query.filter(
-            Community.contacts.contains(current_user)).subquery()
+        Community.contacts.contains(current_user)).subquery()
     asns_self = AS.query.join(comm_subq, AS.Community)
     form.community.query = communities_self
     form.asn.query = asns_self
@@ -285,13 +289,15 @@ def create_customeredge():
         return redirect(url_for('customeredges'))
     return render_template("backbone/customeredge-create.html", form=form)
 
-@app.route('/create/as', methods=['GET', 'POST'])
+
+@app.route('/asn', methods=['GET', 'POST'])
 @login_required
 def create_as():
-    form = CreateAS()
+    form = FormAS()
     communities_self = Community.query.join(Community.contacts).filter(
-            Contact.id.like(current_user.id)).options(db.contains_eager(
-                Community.contacts))
+        Contact.id.like(current_user.id)).options(
+            db.contains_eager(Community.contacts)
+            )
     form.community.query = communities_self
     if form.validate_on_submit():
         asn = AS()
@@ -306,18 +312,45 @@ def create_as():
         db.session.commit()
         flash('Customer Edge has been created')
         return redirect(url_for('communities'))
-    return render_template("backbone/as-create.html", form=form)
+    return render_template("backbone/as.html", form=form)
+
+
+@app.route('/asn/<asn_id>', methods=['GET', 'POST'])
+@login_required
+def asn(asn_id):
+    comm_subq = Community.query.filter(
+        Community.contacts.contains(current_user)).subquery()
+    this_asn = AS.query.filter_by(id=asn_id).join(comm_subq, AS.Community).first()
+    if this_asn is None:
+        flash('Access denied!')
+        return redirect(url_for('index'))
+    form = FormAS(obj=this_asn)
+    if this_asn.Community is not None:
+        form.community.data = this_asn.Community
+    communities_self = Community.query.join(Community.contacts).filter(
+        Contact.id.like(current_user.id)).options(
+            db.contains_eager(Community.contacts)
+            )
+    form.community.query = communities_self
+    if form.validate_on_submit():
+        form.populate_obj(this_asn)
+        this_asn.changed = datetime.now()
+        db.session.add(this_asn)
+        db.session.commit()
+        return redirect(url_for('communities'))
+    return render_template("backbone/as.html", form=form)
+
 
 @app.route('/communities')
 @login_required
 def communities():
     communities_self = Community.query.join(
-            Contact,
-            Community.contacts
-            ).options(db.joinedload('asns')).options(
-                    db.lazyload('nameservers')
-                    ).filter_by(id=current_user.id).options(
-                            db.joinedload('contacts'))
+        Contact,
+        Community.contacts
+    ).options(db.joinedload('asns')).options(
+        db.lazyload('nameservers')
+    ).filter_by(id=current_user.id).options(
+        db.joinedload('contacts'))
     for community in communities_self:
         community.isfirst = True
         break
