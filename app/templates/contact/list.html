@@ -40,15 +40,15 @@
 			</ul>
 		</td>
 		{% if admin %}
-		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('contact', contact_id=contact.id) }}">Edit</a>&nbsp;<a href="/contacts" class="btn btn-danger btn-sm active">Delete</a></td>
+		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('contacts.edit', contact_id=contact.id) }}">Edit</a>&nbsp;<a href="/contacts" class="btn btn-danger btn-sm active">Delete</a></td>
 		{% endif %}
                 {% if not admin %}
-                <td><a class="btn btn-primary btn-sm disabled" href="{{ url_for('contact', contact_id=contact.id) }}">Edit</a>&nbsp;<a href="/contacts" class="btn btn-danger btn-sm disabled">Delete</a></td>
+                <td><a class="btn btn-primary btn-sm disabled" href="{{ url_for('contacts.edit', contact_id=contact.id) }}">Edit</a>&nbsp;<a href="/contacts" class="btn btn-danger btn-sm disabled">Delete</a></td>
                 {% endif %}
 
 	</tr>
 	{% endfor %}
 	</table></br></br>
-	<a class="btn btn-primary btn-sm active" href="{{ url_for('create_contact') }}">Create New Customer Edge</a>
+	<a class="btn btn-primary btn-sm active" href="{{ url_for('contacts.create') }}">Create New Customer Edge</a>
 </div>
 {% endblock %}
