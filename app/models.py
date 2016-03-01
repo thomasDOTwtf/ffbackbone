@@ -52,7 +52,7 @@ class Community(db.Model):
     contacts = db.relationship(
             'Contact',
             secondary=CommunityContacts,
-            backref=db.backref('Community', lazy='dynamic')
+            backref=db.backref('Community', lazy='joined')
             )
     ces = db.relationship(
             'CustomerEdge',
@@ -155,8 +155,8 @@ class Contact(db.Model):
     mail = db.Column(db.Unicode(260), unique=True)
     nickname = db.Column(db.Unicode(260), unique=True)
     xmpp = db.Column(db.Unicode(260), unique=True)
-    firstname = db.Column(db.Unicode(260), unique=True)
-    lastname = db.Column(db.Unicode(260), unique=True)
+    firstname = db.Column(db.Unicode(260), unique=False)
+    lastname = db.Column(db.Unicode(260), unique=False)
     login = db.Column(db.Unicode(260), unique=True)
     password = db.Column(db.String(260), unique=True)
     handle = db.Column(db.String(260), unique=True)
@@ -179,7 +179,8 @@ class Contact(db.Model):
     def get_contacts(self):
         comm_subq = Community.query.filter(
         Community.contacts.contains(self)).subquery()
-        return Contact.query.join(comm_subq, Contact.Community)
+        contacts=Contact.query.join(comm_subq, Contact.Community).options(db.subqueryload(Contact.Community))
+        return contacts
 
     def get_nameservers(self):
         comm_subq = Community.query.filter(

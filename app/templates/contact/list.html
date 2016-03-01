@@ -34,7 +34,7 @@
 		<td> <a target="_blank" href="https://apps.db.ripe.net/search/query.html?searchtext={{ contact.handle }}&bflag=true&rflag=true&source=RIPE#resultsAnchor">{{ contact.handle }}</a></td>
 		<td> 
 			<ul>
-			{% for community in contact.communities %}
+			{% for community in contact.Community %}
 				<li>{{ community.name }}</li>
 			{% endfor %}
 			</ul>
@@ -48,6 +48,7 @@
 
 	</tr>
 	{% endfor %}
-	</table>
+	</table></br></br>
+	<a class="btn btn-primary btn-sm active" href="{{ url_for('create_contact') }}">Create New Customer Edge</a>
 </div>
 {% endblock %}

@@ -62,3 +62,17 @@ class FormAS(Form):
     descr = StringField('Description', validators=[Length(1, 255)])
     community = QuerySelectMultipleField('Community', validators=[Required()])
     submit = SubmitField('Submit')
+
+class FormContact(Form):
+    edit = HiddenField()
+    firstname = StringField('Firstname', validators=[Required(), Length(1, 255)])
+    lastname = StringField('Lastname', validators=[Required(), Length(1, 255)])
+    mail = StringField('E-Mail', validators=[Required(), Length(1, 255)])
+    xmpp = StringField('XMPP', validators=[Length(1, 255)])
+    nickname = StringField('Nickname', validators=[Required(), Length(1, 255)])
+    handle = StringField('Handle', validators=[Required(), Length(1, 255)])
+    login = StringField('Login', validators=[Required(), Length(1, 255)])
+    password = PasswordField('Password', validators=[Required(), Length(1, 255)])
+    admin = BooleanField('Admin')
+    community = QuerySelectMultipleField('Community', validators=[Required()])
+    submit = SubmitField('Submit')

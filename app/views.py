@@ -184,8 +184,22 @@ def customeredge(ce_id):
         ce=ce,
         sessions=sessions)
 
+@app.route('/contact/new', methods=['GET', 'POST'])
+@login_required
+def create_contact():
+    form = FormContact()
+    form.community.query = current_user.get_communities()
+    if form.validate_on_submit():
+        contact = Contact()
+        form.populate_obj(contact)
+        db.session.add(contact)
+        contact.Community = form.community.data
+        db.session.commit()
+        flash('Contact has been created')
+        return redirect(url_for('contacts'))
+    return render_template("contact/detail.html", form=form)
 
-@app.route('/contact/<contact_id>')
+@app.route('/contact/<contact_id>', methods=['GET', 'POST'])
 @login_required
 def contact(contact_id):
     contact = Contact.query.filter_by(id=contact_id).first_or_404()
@@ -207,9 +221,19 @@ def contact(contact_id):
                     current_user.admin is True and same is False):  # noqa
         flash('You don''t have permissions to edit selected contact information')  # noqa
         return redirect(url_for('index'))
+    form = FormContact(obj=contact,edit=True)
+    form.community.query=current_user.get_communities()
+    if contact.Community is not None:
+        form.community.data = contact.Community
+    if form.validate_on_submit():
+        form.populate_obj(contact)
+        db.session.add(contact)
+        db.session.commit()
+        return redirect(url_for('contacts'))
     return render_template('contact/detail.html',
                            contact=contact,
-                           communities=communities_self)
+                           communities=communities_self,
+                           form=form)
 
 
 @app.route('/contacts')
@@ -259,12 +283,11 @@ def create_as():
         asn.created = datetime.now()
         asn.changed = datetime.now()
         db.session.add(asn)
-        for community in form.community.data:
-            community.asns.append(asn)
+        asn.Community = form.community.data
         db.session.commit()
         flash('Customer Edge has been created')
         return redirect(url_for('communities'))
-    return render_template("backbone/as.html", form=form)
+    return render_template("as/detail.html", form=form)
 
 
 @app.route('/asn/<asn_id>', methods=['GET', 'POST'])
@@ -286,7 +309,7 @@ def asn(asn_id):
         db.session.add(this_asn)
         db.session.commit()
         return redirect(url_for('communities'))
-    return render_template("backbone/as.html", form=form)
+    return render_template("as/detail.html", form=form)
 
 
 @app.route('/communities')
@@ -298,13 +321,12 @@ def communities():
     ).options(db.joinedload('asns')).options(
         db.lazyload('nameservers')
     ).filter_by(id=current_user.id).options(
-        db.joinedload('contacts'))
-    for community in communities_self:
-        community.isfirst = True
-        break
+        db.joinedload('contacts')).all()
+    if communities_self is not None:
+        communities_self[0].isfirst = True
     return render_template('communities.html',
                            communities=communities_self,
-                           count=communities_self.count()
+                           count=len(communities_self)
                            )
 
 @app.route('/logout')
