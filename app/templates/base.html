@@ -25,11 +25,11 @@
             <ul class="nav navbar-nav">
                 <li><a href="{{ url_for('index') }}">Home</a></li>
                 {% if current_user.is_authenticated %}
-		<li><a href="{{ url_for('communities') }}">Communities</a></li>
+		<li><a href="{{ url_for('communities.list') }}">Communities</a></li>
         <li><a href="{{ url_for('asns.list') }}">ASNs</a></li>
 		<li><a href="{{ url_for('contacts.list') }}">Contacts</a></li>
-		<li><a href="{{ url_for('customeredges') }}">CustomerEdges</a></li>
-		<li><a href="{{ url_for('prefixes') }}">Prefixes</a></li>
+		<li><a href="{{ url_for('customeredges.list') }}">CustomerEdges</a></li>
+		<li><a href="{{ url_for('prefixes.list') }}">Prefixes</a></li>
                 {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -41,12 +41,12 @@
                     </a>
                     <ul class="dropdown-menu">
 			<li><a href="{{ url_for('contacts.edit', contact_id=current_user.id)}}">Profile</a></li>
-                        <li><a href="{{ url_for('change_password') }}">Change Password</a></li>
-                        <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+                        <li><a href="{{ url_for('session.change_password') }}">Change Password</a></li>
+                        <li><a href="{{ url_for('session.logout') }}">Log Out</a></li>
                     </ul>
                 </li>
                 {% else %}
-                <li><a href="{{ url_for('login') }}">Log In</a></li>
+                <li><a href="{{ url_for('session.login') }}">Log In</a></li>
                 {% endif %}
             </ul>
         </div>

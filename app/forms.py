@@ -63,6 +63,7 @@ class FormAS(Form):
     community = QuerySelectMultipleField('Community', validators=[Required()])
     submit = SubmitField('Submit')
 
+
 class FormContact(Form):
     def my_password_check(form, field):
         if not form.edit.object_data:
@@ -83,5 +84,3 @@ class FormContact(Form):
     admin = BooleanField('Admin')
     community = QuerySelectMultipleField('Community', validators=[Required()])
     submit = SubmitField('Submit')
-
-

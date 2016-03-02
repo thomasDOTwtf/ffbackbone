@@ -41,11 +41,11 @@
 		        {% endfor %}
 			</ul>
 		</td>
-		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('customeredge', ce_id=ce.id) }}">Edit</a>&nbsp;<a href="/customeredges" class="btn btn-danger btn-sm active">Delete</a></td>
+		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('customeredges.edit', ce_id=ce.id) }}">Edit</a>&nbsp;<a href="/customeredges" class="btn btn-danger btn-sm active">Delete</a></td>
 
 	</tr>
 	{% endfor %}
 	<table></br></br>
-	<a class="btn btn-primary btn-sm active" href="{{ url_for('create_customeredge') }}">Create New Customer Edge</a>
+	<a class="btn btn-primary btn-sm active" href="{{ url_for('customeredges.create') }}">Create New Customer Edge</a>
 </div>
 {% endblock %}
