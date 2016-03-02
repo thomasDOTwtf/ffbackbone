@@ -43,11 +43,11 @@
 		<td>
 		        <ul>
                         {% for contact in prefix.contacts %}
-                        <li><a href="{{ url_for('contact', contact_id=contact.id) }}">{{ contact.lastname }}, {{ contact.firstname }} [{{ contact.handle }}]</a> </li>
+                        <li><a href="{{ url_for('contacts.edit', contact_id=contact.id) }}">{{ contact.lastname }}, {{ contact.firstname }} [{{ contact.handle }}]</a> </li>
                         {% endfor %}
                         </ul>
                 </td>	
-		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('prefix', prefix_id=prefix.id) }}">Edit</a>&nbsp;<a href="/prefixes" class="btn btn-danger btn-sm active">Delete</a></td>
+		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('prefixes.edit', prefix_id=prefix.id) }}">Edit</a>&nbsp;<a href="/prefixes" class="btn btn-danger btn-sm active">Delete</a></td>
 	</tr>
 	{% endfor %}
 	<table>
