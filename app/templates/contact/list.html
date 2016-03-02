@@ -40,10 +40,10 @@
 			</ul>
 		</td>
 		{% if admin %}
-		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('contacts.edit', contact_id=contact.id) }}">Edit</a>&nbsp;<a href="/contacts" class="btn btn-danger btn-sm active">Delete</a></td>
+		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('contacts.edit', contact_id=contact.id) }}">Edit</a>&nbsp;<a href="{{ url_for('contacts.delete', contact_id=contact.id) }}" class="btn btn-danger btn-sm active">Delete</a></td>
 		{% endif %}
                 {% if not admin %}
-                <td><a class="btn btn-primary btn-sm disabled" href="{{ url_for('contacts.edit', contact_id=contact.id) }}">Edit</a>&nbsp;<a href="/contacts" class="btn btn-danger btn-sm disabled">Delete</a></td>
+                <td><a class="btn btn-primary btn-sm disabled" href="{{ url_for('contacts.edit', contact_id=contact.id) }}">Edit</a>&nbsp;<a href="{{ url_for('contacts.delete', contact_id=contact.id) }}" class="btn btn-danger btn-sm disabled">Delete</a></td>
                 {% endif %}
 
 	</tr>

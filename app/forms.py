@@ -64,15 +64,24 @@ class FormAS(Form):
     submit = SubmitField('Submit')
 
 class FormContact(Form):
+    def my_password_check(form, field):
+        if not form.edit.object_data:
+            if field.data is None:
+                raise ValidationError('Password should not be empty')
+            if len(field.data) < 8:
+                raise ValidationError('Password should be at least 8 chars')
     edit = HiddenField()
+    password = HiddenField()
     firstname = StringField('Firstname', validators=[Required(), Length(1, 255)])
     lastname = StringField('Lastname', validators=[Required(), Length(1, 255)])
-    mail = StringField('E-Mail', validators=[Required(), Length(1, 255)])
-    xmpp = StringField('XMPP', validators=[Length(1, 255)])
+    mail = StringField('E-Mail', validators=[Email(),Required(), Length(1, 255)])
+    xmpp = StringField('XMPP', validators=[Email(),Length(1, 255)])
     nickname = StringField('Nickname', validators=[Required(), Length(1, 255)])
     handle = StringField('Handle', validators=[Required(), Length(1, 255)])
     login = StringField('Login', validators=[Required(), Length(1, 255)])
-    password = PasswordField('Password', validators=[Required(), Length(1, 255)])
+    newpassword = PasswordField('Password', validators=[my_password_check])
     admin = BooleanField('Admin')
     community = QuerySelectMultipleField('Community', validators=[Required()])
     submit = SubmitField('Submit')
+
+

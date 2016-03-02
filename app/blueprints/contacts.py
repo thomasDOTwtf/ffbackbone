@@ -8,12 +8,21 @@ contacts = Blueprint('contacts', __name__, template_folder='templates')
 
 
 @contacts.route('/contact')
+@contacts.route('/contact/')
 @login_required
 def list():
     return render_template('contact/list.html',
                            contacts=current_user.get_contacts(),
                            admin=current_user.admin)
 
+@contacts.route('/contacts/delete/<contact_id>')
+@login_required
+def delete(contact_id):
+    contact=Contact.query.filter_by(id=contact_id)
+    contact.delete()
+    db.session.commit()
+    flash('Contact deleted successfully!')
+    return redirect(url_for('contacts.list'))
 
 @contacts.route('/contact/new', methods=['GET', 'POST'])
 @login_required
@@ -23,6 +32,7 @@ def create():
     if form.validate_on_submit():
         contact = Contact()
         form.populate_obj(contact)
+        contact.set_password(form.newpassword.data)
         db.session.add(contact)
         contact.Community = form.community.data
         db.session.commit()
@@ -59,6 +69,8 @@ def edit(contact_id):
         form.community.data = contact.Community
     if form.validate_on_submit():
         form.populate_obj(contact)
+        if form.newpassword is not None:
+            contact.set_password(form.newpassword.data)
         db.session.add(contact)
         db.session.commit()
         return redirect(url_for('contacts.list'))

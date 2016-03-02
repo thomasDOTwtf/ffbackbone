@@ -21,7 +21,7 @@ def create():
         asn.Community = form.community.data
         db.session.commit()
         flash('Customer Edge has been created')
-        return redirect(url_for('asn_list'))
+        return redirect(url_for('asns.list'))
     return render_template("as/detail.html", form=form)
 
 
@@ -32,7 +32,7 @@ def delete(asn_id):
     asn.delete()
     db.session.commit()
     flash('AS deleted successfully!')
-    return redirect(url_for('asn_list'))
+    return redirect(url_for('asns.list'))
 
 
 @asns.route('/asn/<asn_id>', methods=['GET', 'POST'])
@@ -53,11 +53,12 @@ def edit(asn_id):
         this_asn.changed = datetime.now()
         db.session.add(this_asn)
         db.session.commit()
-        return redirect(url_for('asn_list'))
+        return redirect(url_for('asns.list'))
     return render_template("as/detail.html", form=form)
 
 
 @asns.route('/asn')
+@asns.route('/asn/')
 @login_required
 def list():
     return render_template("as/list.html",asns=current_user.get_asns())
