@@ -1,12 +1,8 @@
-from app import app
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
-from flask import render_template, flash, redirect, session, url_for, request, g  # noqa
-from flask.ext.login import login_user, logout_user, current_user, login_required  # noqa
-from flask import Flask, Response
-from flask.ext.login import LoginManager, UserMixin, login_required
+from flask import  g
+from flask.ext.login import current_user,LoginManager
 from flask_bootstrap import Bootstrap
-from datetime import datetime
 from app.blueprints.contacts import contacts
 from app.blueprints.asns import asns
 from app.blueprints.customeredges import customeredges
@@ -14,9 +10,7 @@ from app.blueprints.prefixes import prefixes
 from app.blueprints.communities import communities
 from app.blueprints.session import session
 from app.models import *
-from app.forms import *
 from app.email import *
-import pprint
 
 admin = Admin(app)
 admin.add_view(ModelView(Community, db.session))
@@ -53,6 +47,7 @@ app.register_blueprint(communities)
 @app.route('/index')
 def index():
     return render_template('base.html', title='Home')
+
 
 @app.before_request
 def before_request():
