@@ -5,6 +5,7 @@ from flask.ext.login import current_user,LoginManager
 from flask_bootstrap import Bootstrap
 from app.blueprints.contacts import contacts
 from app.blueprints.asns import asns
+from app.blueprints.nameservers import nameservers
 from app.blueprints.customeredges import customeredges
 from app.blueprints.prefixes import prefixes
 from app.blueprints.communities import communities
@@ -37,6 +38,7 @@ def load_user(user_id):
 Bootstrap(app)
 app.register_blueprint(session)
 app.register_blueprint(contacts)
+app.register_blueprint(nameservers)
 app.register_blueprint(asns)
 app.register_blueprint(customeredges)
 app.register_blueprint(prefixes)

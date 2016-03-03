@@ -10,8 +10,8 @@ customeredges = Blueprint('customeredges', __name__, template_folder='templates'
 @customeredges.route('/customeredge/<ce_id>')
 @login_required
 def edit(ce_id):
-    customeredges = current_user.get_customeredges().filter_by(id=ce_id)
-    if customeredges.count() == 0:
+    customeredges = current_user.get_customeredges().filter_by(id=ce_id).all()
+    if customeredges is None:
         flash('You don''t belong to the CustomerEdge''s Community')  # noqa
         return redirect(url_for('customeredges.list'))
     ce = CustomerEdge.query.filter_by(id=ce_id).options(

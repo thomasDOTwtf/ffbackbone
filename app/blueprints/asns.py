@@ -22,7 +22,7 @@ def create():
         db.session.commit()
         flash('Customer Edge has been created')
         return redirect(url_for('asns.list'))
-    return render_template("as/detail.html", form=form)
+    return render_template("as/detail.html", form=form, edit=False)
 
 
 @asns.route('/asn/delete/<asn_id>')
@@ -45,16 +45,21 @@ def edit(asn_id):
         flash('Access denied!')
         return redirect(url_for('index'))
     form = FormAS(obj=this_asn, edit=True)
-    if this_asn.Community is not None:
-        form.community.data = this_asn.Community
-    form.community.query = current_user.get_communities()
+    #if this_asn.Community is not None:
+    #    form.community.data = this_asn.Community
+    #if this_asn.contacts is not None:
+    #    form.contacts.data = this_asn.contacts
+    form.communities.query = current_user.get_communities()
+    form.contacts.query = current_user.get_contacts()
     if form.validate_on_submit():
         form.populate_obj(this_asn)
+        #this_asn.contacts=form.contacts.data
+        #this_asn.Community=form.community.data
         this_asn.changed = datetime.now()
         db.session.add(this_asn)
         db.session.commit()
         return redirect(url_for('asns.list'))
-    return render_template("as/detail.html", form=form)
+    return render_template("as/detail.html", form=form, edit=True)
 
 
 @asns.route('/asn')

@@ -94,7 +94,7 @@ class CustomerEdge(db.Model):
 
 class ProviderEdge(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(260), unique=True)
+    name = db.Column(db.String(260), unique=False)
     fqdn = db.Column(db.String(260), unique=True)
     ipv4 = db.Column(db.String(260), unique=True)
     ipv6 = db.Column(db.String(260), unique=True)
@@ -113,14 +113,19 @@ class ProviderEdge(db.Model):
 class AS(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     asn = db.Column(db.Integer, unique=True)
-    name = db.Column(db.String(260), unique=True)
-    descr = db.Column(db.String(260), unique=True)
+    name = db.Column(db.String(260), unique=False)
+    descr = db.Column(db.String(260), unique=False)
     created = db.Column(db.DateTime)
     changed = db.Column(db.DateTime)
     approved = db.Column(db.DateTime)
     contacts = db.relationship(
             'Contact',
             secondary=ASContacts,
+            backref=db.backref('AS', lazy='dynamic')
+            )
+    communities = db.relationship(
+            'Community',
+            secondary=CommunityASNs,
             backref=db.backref('AS', lazy='dynamic')
             )
     provideredges = db.relationship(
@@ -208,7 +213,7 @@ class Contact(db.Model):
             return str(self.id)  # python 3
 
     def __repr__(self):
-        return '<User %r>' % (self.nickname)
+        return '{self.nickname} [{self.lastname}, {self.firstname}]'.format(self=self)
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -235,7 +240,7 @@ class Contact(db.Model):
 
 class Site(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(260), unique=True)
+    name = db.Column(db.String(260), unique=False)
     country = db.Column(db.String(2))
     city = db.Column(db.String(5))
     datacenter = db.Column(db.String(5))
@@ -298,7 +303,7 @@ class PrefixType(db.Model):
 
 class NameServer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    fqdn = db.Column(db.String(260), unique=True)
+    fqdn = db.Column(db.String(260), unique=False)
     community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
 
     def __repr__(self):

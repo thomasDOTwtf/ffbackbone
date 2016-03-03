@@ -56,11 +56,17 @@ class CreateCustomerEdge(Form):
 
 
 class FormAS(Form):
-    edit = HiddenField()
     asn = IntegerField('ASN', validators=[Required()])
     name = StringField('Name', validators=[Required(), Length(1, 16)])
     descr = StringField('Description', validators=[Length(1, 255)])
-    community = QuerySelectMultipleField('Community', validators=[Required()])
+    communities = QuerySelectMultipleField('Community', validators=[Required()])
+    contacts = QuerySelectMultipleField('Contact')
+    submit = SubmitField('Submit')
+
+
+class FormNameserver(Form):
+    fqdn = StringField('FQDN', validators=[Required()])
+    community = QuerySelectField('Community', validators=[Required()])
     submit = SubmitField('Submit')
 
 

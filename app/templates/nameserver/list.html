@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Backbone Admin Tool - Nameservers{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Your Communitiy Nameservers</h1>
+</div>
+<div class="col-md-18">
+	<h3>Nameserver List</h3>
+	<table class="table table-striped">
+        <colgroup>
+        <col class="col-md-2">
+	    <col class="col-md-2">
+	    <col class="col-md-4">
+	</colgroup>
+	<tr>
+		<th>Nameserver</th>
+		<th>Community</th>
+		<th>Actions</th>
+	</tr>
+	{% for nameserver in nameservers %}
+	<tr>
+        	<td> {{ nameserver.fqdn }} </td>
+	        <td> {{ nameserver.Community.name }} </td>
+		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('nameservers.edit', nameserver_id=nameserver.id) }}">Edit</a>&nbsp;<a href="{{ url_for('nameservers.delete', nameserver_id=nameserver.id) }}" class="btn btn-danger btn-sm active">Delete</a></td>
+
+	</tr>
+	{% endfor %}
+	</table></br></br>
+	<a class="btn btn-primary btn-sm active" href="{{ url_for('nameservers.create') }}">Create New Nameserver</a>
+</div>
+{% endblock %}

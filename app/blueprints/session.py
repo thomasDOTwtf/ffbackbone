@@ -1,16 +1,7 @@
 from flask import Blueprint
-from flask import render_template, flash, redirect, url_for, request, g  # noqa
-from flask.ext.login import current_user, login_required
-from app import app
-from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
-from flask import render_template, flash, redirect, session, url_for, request, g  # noqa
+
+from flask import flash, redirect, session, url_for, request, g  # noqa
 from flask.ext.login import login_user, logout_user, current_user, login_required  # noqa
-from flask import Flask, Response
-from flask.ext.login import LoginManager, UserMixin, login_required
-from flask_bootstrap import Bootstrap
-from datetime import datetime
-from datetime import datetime
 from app.forms import *
 from app.models import *
 from app.email import *
@@ -34,7 +25,7 @@ def login():
 @session.route('/user/<login>')
 @login_required
 def user(login):
-    user = User.query.filter_by(login=login).first_or_404()
+    user = Contact.query.filter_by(login=login).first_or_404()
     page = request.args.get('page', 1, type=int)
     return render_template('base.html')
 
