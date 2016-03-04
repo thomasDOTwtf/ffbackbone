@@ -93,6 +93,6 @@ class FormContact(Form):
 
 
 class FormCommunity(Form):
-    name = StringField(Required(),validators=[Length(1,255)])
-    short = StringField(Required(),validators=[Length(1,8)])
+    name = StringField('Name', validators=[Required(), Length(1,255)])
+    short = StringField('Short', validators=[Required(), Length(1,8)])
     submit = SubmitField('Update Community')

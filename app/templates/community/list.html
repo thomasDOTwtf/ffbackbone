@@ -1,122 +1,34 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Backbone Admin Tool - Contact{% endblock %}
+{% block title %}Backbone Admin Tool - Communities{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
-    <h1>Your Communities</h1>
+    <h1>Your Communitiies</h1>
 </div>
-<script>
-$(document).ready(function(){
-		    $('[data-toggle="tooltip"]').tooltip(); 
-		    });
-</script>
-<ul class="nav nav-tabs">
-	{% for community in communities %}
-	{% if community.isfirst %}
-	<li class="active"><a data-toggle="tab" href="#{{ community.id }}">{{ community.name }}</a></li>
-        {% else %}
-        <li><a data-toggle="tab" href="#{{ community.id }}">{{ community.name }}</a></li>
-        {% endif %}
-	{% endfor %}
-	{% if count == 0 %}
-	<li class="active"><a data-toggle="tab" href="#add">Add</a></li>
-	{% else %}
-	<li><a data-toggle="tab" href="#add">Add</a></li>
-	{% endif %}
-</ul>
+<div class="col-md-18">
+	<h3>Community List</h3>
+	<table class="table table-striped">
+        <colgroup>
+        <col class="col-md-4">
+	    <col class="col-md-2">
+	    <col class="col-md-1">
+	</colgroup>
+	<tr>
+		<th>Name</th>
+		<th>Short-Name</th>
+		<th>Actions</th>
+	</tr>
+	{% for communtiy in communities %}
+	<tr>
+        	<td> {{ communtiy.name }} </td>
+	        <td> {{ communtiy.short }} </td>
+		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('communities.edit', community_id=communtiy.id) }}">Edit</a>&nbsp;<a href="{{ url_for('communities.delete', community_id=communtiy.id) }}" class="btn btn-danger btn-sm active">Delete</a></td>
 
-<div class="tab-content">
-	{% for community in communities %}
-	{% if community.isfirst %}
-	<div id="{{ community.id }}" class="tab-pane fade in active">
-	{% else %}
-	<div id="{{ community.id }}" class="tab-pane fade in">
-	{% endif %}
-		<h3>{{ community.name }}</h3>
-		<div class="container">
-			<div class="form-group">
-				<label for="usr">Name:</label>
-				<input type="text" class="form-control" id="usr" value="{{ community.name }}">
-			</div>
-			<div class="form-group">
-                	        <label for="usr">Shortname:</label>
-                        	<input type="text" class="form-control" id="usr" value="{{ community.short }}">
-	                </div>
-			<div class="form-group">
-                	        <label for="usr">Created:</label>
-                        	<input type="text" class="form-control" id="usr" value="{{ community.created }}" disabled>
-	                </div>
-		</div>
-		<div class="container">
-			<h3>Communities ASNs</h3>
-			<p>Following ASNs are operated by your community:</p>            
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th>ASN</th>
-						<th>Name</th>
-						<th>Description</th>
-						<th>Approved</th>
-						<th>Actions</th>
-						</tr>
-				</thead>
-				<tbody>
-					{% for asn in community.asns %}
-					<tr>
-						<td>{{ asn.asn }}</td>
-						<td>{{ asn.name }}</td>
-						<td>{{ asn.descr }}</td>
-						{% if asn.isapproved() %}
-						<td><span class="glyphicon glyphicon-ok-circle"></span></td>
-						{% else %}
-						<td><span class="glyphicon glyphicon-ban-circle"></span></td>
-						{% endif %}
-						<td>&nbsp;</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-                <div class="container">
-                        <h3>Communities Nameservers</h3>
-                        <p>Following Nameservers are operated by your community:</p>
-                        <table class="table table-striped">
-                                <thead>
-                                        <tr>
-                                                <th>FQDN</th>
-						<th>Actions</th>
-                                        </tr>
-                                </thead>
-                                <tbody>
-                                        {% for ns in community.nameservers %}
-                                        <tr>
-                                                <td>{{ ns.fqdn }}</td>
-						<td>&nbsp;</td>
-                                        </tr>
-                                        {% endfor %}
-                                </tbody>
-                        </table>
-                </div>
-	</div>
+	</tr>
 	{% endfor %}
-	{% if count == 0 %}
-	<div id="add" class="tab-pane fade in active">
-	{% else %}
-	<div id="add" class="tab-pane fade in">
-	{% endif %}
-		<h3>Add Community</h3>
-		<p>Some content in menu 2.</p>
-	</div>
-</div>
-</br></br></br></br>
-		<div class="form-group"> 
-			<div class="col-sm-offset-2 col-sm-10">
-				<button type="submit" class="btn btn-success">Submit</button>
-				<button type="button" class="btn btn-danger">Back</button>
-			</div>
-		</div>
-	</form>	
+	</table></br></br>
+	<a class="btn btn-primary btn-sm active" href="{{ url_for('communities.create') }}">Create New Community</a>
 </div>
 {% endblock %}
