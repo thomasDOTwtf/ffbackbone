@@ -19,6 +19,20 @@ def list():
         db.joinedload('contacts')).all()
     if communities_self is not None:
         communities_self[0].isfirst = True
-    return render_template('communities.html',
+    return render_template('community/list.html',
                            communities=communities_self,
                            count=len(communities_self))
+
+
+@communities.route('/community/<community_id>', methods=['GET', 'POST'])
+@login_required
+def edit(community_id):
+    this_community=Community.query.filter_by(id=community_id).first()
+    form = FormCommunity(obj=this_community, edit=True)
+    if form.validate_on_submit():
+        form.populate_obj(this_community)
+        db.session.add(this_community)
+        this_community.created = datetime.now()
+        db.session.commit()
+    return render_template('community/detail.html',
+                           form=form)

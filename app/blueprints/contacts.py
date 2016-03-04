@@ -28,13 +28,12 @@ def delete(contact_id):
 @login_required
 def create():
     form = FormContact()
-    form.community.query = current_user.get_communities()
+    form.communities.query = current_user.get_communities()
     if form.validate_on_submit():
         contact = Contact()
         form.populate_obj(contact)
         contact.set_password(form.newpassword.data)
         db.session.add(contact)
-        contact.Community = form.community.data
         db.session.commit()
         flash('Contact has been created')
         return redirect(url_for('contacts.list'))
@@ -64,9 +63,7 @@ def edit(contact_id):
         flash('You don''t have permissions to edit selected contact information')  # noqa
         return redirect(url_for('index'))
     form = FormContact(obj=contact, edit=True)
-    form.community.query = current_user.get_communities()
-    if contact.Community is not None:
-        form.community.data = contact.Community
+    form.communities.query = current_user.get_communities()
     if form.validate_on_submit():
         form.populate_obj(contact)
         if form.newpassword is not None:

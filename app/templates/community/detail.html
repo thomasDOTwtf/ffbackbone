@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+    {% if edit %}
+        Backbone Admin Tool - Edit Community
+    {% else %}
+        Backbone Admin Tool - Create Community
+    {% endif %}
+{% endblock %}
+{% block page_content %}
+    <div class="page-header">
+    {% if edit %}
+        <h1>Edit Community</h1>
+    {% else %}
+        <h1>Create Community</h1>
+    {% endif %}
+    </div>
+    <div class="col-md-4">
+        {{ wtf.quick_form(form) }}
+    </div>
+{% endblock %}

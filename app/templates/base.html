@@ -26,9 +26,9 @@
                 <li><a href="{{ url_for('index') }}">Home</a></li>
                 {% if current_user.is_authenticated %}
 		<li><a href="{{ url_for('communities.list') }}">Communities</a></li>
+		<li><a href="{{ url_for('contacts.list') }}">Contacts</a></li>
         <li><a href="{{ url_for('nameservers.list') }}">NameServers</a></li>
         <li><a href="{{ url_for('asns.list') }}">ASNs</a></li>
-		<li><a href="{{ url_for('contacts.list') }}">Contacts</a></li>
 		<li><a href="{{ url_for('customeredges.list') }}">CustomerEdges</a></li>
 		<li><a href="{{ url_for('prefixes.list') }}">Prefixes</a></li>
                 {% endif %}

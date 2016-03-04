@@ -52,7 +52,7 @@ class Community(db.Model):
     contacts = db.relationship(
             'Contact',
             secondary=CommunityContacts,
-            backref=db.backref('Community', lazy='joined')
+            back_populates="communities"
             )
     ces = db.relationship(
             'CustomerEdge',
@@ -166,6 +166,11 @@ class Contact(db.Model):
     password = db.Column(db.String(260), unique=True)
     handle = db.Column(db.String(260), unique=True)
     admin = db.Column(db.Boolean)
+    communities = db.relationship(
+        'Community',
+        secondary=CommunityContacts,
+        back_populates="contacts"
+    )
 
     def __repr__(self):
         return '{self.nickname} ({self.mail})'.format(self=self)
@@ -184,7 +189,7 @@ class Contact(db.Model):
     def get_contacts(self):
         comm_subq = Community.query.filter(
         Community.contacts.contains(self)).subquery()
-        contacts=Contact.query.join(comm_subq, Contact.Community).options(db.subqueryload(Contact.Community))
+        contacts=Contact.query.join(comm_subq, Contact.communities).options(db.subqueryload(Contact.communities))
         return contacts
 
     def get_nameservers(self):

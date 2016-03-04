@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
-from wtforms import IntegerField, StringField, PasswordField, BooleanField, SubmitField, SelectMultipleField, HiddenField
+from wtforms import IntegerField, StringField, PasswordField, BooleanField, SubmitField, SelectMultipleField, HiddenField,DateTimeField
 from wtforms.validators import Required, Length, Email, Regexp, EqualTo, IPAddress  # noqa
 from wtforms import ValidationError
 
@@ -88,5 +88,11 @@ class FormContact(Form):
     login = StringField('Login', validators=[Required(), Length(1, 255)])
     newpassword = PasswordField('Password', validators=[my_password_check])
     admin = BooleanField('Admin')
-    community = QuerySelectMultipleField('Community', validators=[Required()])
+    communities = QuerySelectMultipleField('Community', validators=[Required()])
     submit = SubmitField('Submit')
+
+
+class FormCommunity(Form):
+    name = StringField(Required(),validators=[Length(1,255)])
+    short = StringField(Required(),validators=[Length(1,8)])
+    submit = SubmitField('Update Community')
