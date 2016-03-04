@@ -48,7 +48,7 @@ app.register_blueprint(communities)
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('base.html', title='Home')
+    return render_template('index.html', title='Home', contact=current_user)
 
 
 @app.before_request
