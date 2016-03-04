@@ -19,7 +19,7 @@ def edit(ce_id):
     sessions = PeeringSession.query.filter_by(ce_id=ce.id).options(
         db.joinedload('TunnelType')).options(db.joinedload('ProviderEdge'))
     return render_template(
-        'backbone/customeredge.html',
+        'customeredge/detail-old.html',
         ce=ce,
         sessions=sessions)
 
@@ -27,7 +27,7 @@ def edit(ce_id):
 @customeredges.route('/customeredge')
 @login_required
 def list():
-    return render_template('backbone/customeredges.html',
+    return render_template('customeredge/list.html',
                            customeredges=current_user.get_customeredges())
 
 
@@ -58,4 +58,4 @@ def create():
         db.session.commit()
         flash('Customer Edge has been created')
         return redirect(url_for('customeredges.list'))
-    return render_template("backbone/customeredge-create.html", form=form)
+    return render_template("customeredge/detail.html.html", form=form)

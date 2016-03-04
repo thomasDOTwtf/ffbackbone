@@ -26,7 +26,7 @@ def list():
     if prefixes.count() == 0:
         flash('No prefixes are currently assigned to you.')  # noqa
         return redirect(url_for('index'))
-    return render_template('backbone/prefixes.html',
+    return render_template('prefix/list.html.html',
                            prefixes=prefixes)
 
 
@@ -54,6 +54,6 @@ def edit(prefix_id):
 
     nameservers = current_user.get_nameservers()
     return render_template(
-        'backbone/prefix.html',
+        'prefix/detail.html',
         prefix=prefix,
         nameservers=nameservers)
