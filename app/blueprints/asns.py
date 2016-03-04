@@ -19,7 +19,6 @@ def create():
         asn.created = datetime.now()
         asn.changed = datetime.now()
         db.session.add(asn)
-        asn.communities = form.communities.data
         db.session.commit()
         flash('Customer Edge has been created')
         return redirect(url_for('asns.list'))

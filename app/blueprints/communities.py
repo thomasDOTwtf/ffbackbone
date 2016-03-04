@@ -32,6 +32,7 @@ def edit(community_id):
         db.session.add(this_community)
         this_community.created = datetime.now()
         db.session.commit()
+        return redirect(url_for('communities.list'))
     return render_template('community/detail.html',
                            form=form, edit=True)
 
@@ -46,6 +47,7 @@ def create():
         db.session.add(this_community)
         this_community.contacts.append(current_user)
         db.session.commit()
+        return redirect(url_for('communities.list'))
     return render_template('community/detail.html',
                            form=form, edit=False)
 
