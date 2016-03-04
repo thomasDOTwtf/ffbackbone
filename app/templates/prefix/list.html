@@ -34,16 +34,16 @@
 		<td> {{ prefix.PrefixType.name }} </td>
 		<td> {{ prefix.Site.name }} </td>
 		<td>
-			<ul>	
+			<ul class="list-group">
 			{% for ns in prefix.nameservers %} 
-			<li>{{ ns.fqdn }}</a> </li>
+			<li class="list-group-item">{{ ns.fqdn }}</a> </li>
 			{% endfor %}
 			</ul>
 		</td>
 		<td>
-		        <ul>
+		        <ul class="list-group">
                         {% for contact in prefix.contacts %}
-                        <li><a href="{{ url_for('contacts.edit', contact_id=contact.id) }}">{{ contact.lastname }}, {{ contact.firstname }} [{{ contact.handle }}]</a> </li>
+                        <li class="list-group-item"><a href="{{ url_for('contacts.edit', contact_id=contact.id) }}">{{ contact.lastname }}, {{ contact.firstname }} [{{ contact.handle }}]</a> </li>
                         {% endfor %}
                         </ul>
                 </td>	

@@ -66,10 +66,9 @@ class Community(db.Model):
             )
     prefixes = db.relationship('Prefix', backref='Community', lazy='dynamic')
     nameservers = db.relationship(
-            'NameServer',
-            backref='Community',
-            lazy='dynamic'
-            )
+        'NameServer',
+        back_populates="community"
+    )
 
     def __repr__(self):
         return self.name
@@ -140,6 +139,7 @@ class AS(db.Model):
             lazy='dynamic',
             uselist='False'
             )
+
     def isapproved(self):
         if self.approved is None:
             return False
@@ -195,7 +195,7 @@ class Contact(db.Model):
     def get_nameservers(self):
         comm_subq = Community.query.filter(
         Community.contacts.contains(self)).subquery()
-        return NameServer.query.join(comm_subq, NameServer.Community)
+        return NameServer.query.join(comm_subq, NameServer.community)
 
     def get_customeredges(self):
         comm_subq = Community.query.filter(
@@ -310,7 +310,10 @@ class NameServer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fqdn = db.Column(db.String(260), unique=False)
     community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
-
+    community = db.relationship(
+        'Community',
+        back_populates="nameservers"
+    )
     def __repr__(self):
         return self.fqdn
 

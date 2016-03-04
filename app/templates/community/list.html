@@ -24,7 +24,7 @@
 	<tr>
         	<td> {{ communtiy.name }} </td>
 	        <td> {{ communtiy.short }} </td>
-		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('communities.edit', community_id=communtiy.id) }}">Edit</a>&nbsp;<a href="{{ url_for('communities.delete', community_id=communtiy.id) }}" class="btn btn-danger btn-sm active">Delete</a></td>
+		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('communities.edit', community_id=communtiy.id) }}">Edit</a></td>
 
 	</tr>
 	{% endfor %}

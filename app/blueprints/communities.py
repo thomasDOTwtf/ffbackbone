@@ -27,6 +27,7 @@ def list():
 def edit(community_id):
     this_community=Community.query.filter_by(id=community_id).first()
     form = FormCommunity(obj=this_community)
+    form.submit.label.text='Update Community'
     if form.validate_on_submit():
         form.populate_obj(this_community)
         db.session.add(this_community)
@@ -42,6 +43,7 @@ def edit(community_id):
 def create():
     this_community=Community()
     form = FormCommunity()
+    form.submit.label.text='Create Community'
     if form.validate_on_submit():
         form.populate_obj(this_community)
         db.session.add(this_community)
@@ -51,11 +53,3 @@ def create():
     return render_template('community/detail.html',
                            form=form, edit=False)
 
-@communities.route('/community/delete/<community_id>')
-@login_required
-def delete(community_id):
-    this_community=Community.query.filter_by(id=community_id)
-    this_community.delete()
-    db.session.commit()
-    flash('Community has been deleted successfully!')
-    return redirect(url_for('communities.list'))

@@ -12,10 +12,10 @@ nameservers = Blueprint('nameservers', __name__, template_folder='templates')
 def create():
     form = FormNameserver()
     form.community.query = current_user.get_communities()
+    form.submit.label.text='Create Nameserver'
     if form.validate_on_submit():
         nameserver = NameServer()
         form.populate_obj(nameserver)
-        nameserver.Community = form.community.data
         db.session.add(nameserver)
         db.session.commit()
         flash('Nameserver has been created')
@@ -43,9 +43,8 @@ def edit(nameserver_id):
         flash('Access denied!')
         return redirect(url_for('index'))
     form = FormNameserver(obj=this_nameserver, edit=True)
-    if this_nameserver.Community is not None:
-        form.community.data = this_nameserver.Community
     form.community.query = current_user.get_communities()
+    form.submit.label.text='Update Nameserver'
     if form.validate_on_submit():
         form.populate_obj(this_nameserver)
         this_nameserver.changed = datetime.now()

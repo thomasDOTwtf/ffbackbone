@@ -35,9 +35,9 @@
 		<td> {{ ce.ipv6 }} </td>
 		<td> {{ ce.AS.asn }} </td>
 		<td>
-			<ul>
+			<ul class="list-group">
 			{% for community in ce.Community %}
-				<li>{{ community.name }}</li>
+				<li class="list-group-item">{{ community.name }}</li>
 		        {% endfor %}
 			</ul>
 		</td>

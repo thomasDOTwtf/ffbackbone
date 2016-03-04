@@ -26,7 +26,7 @@ def list():
     if prefixes.count() == 0:
         flash('No prefixes are currently assigned to you.')  # noqa
         return redirect(url_for('index'))
-    return render_template('prefix/list.html.html',
+    return render_template('prefix/list.html',
                            prefixes=prefixes)
 
 

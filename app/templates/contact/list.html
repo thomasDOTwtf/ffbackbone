@@ -33,9 +33,9 @@
 		<td> {{ contact.firstname }} </td>
 		<td> <a target="_blank" href="https://apps.db.ripe.net/search/query.html?searchtext={{ contact.handle }}&bflag=true&rflag=true&source=RIPE#resultsAnchor">{{ contact.handle }}</a></td>
 		<td> 
-			<ul>
+			<ul class="list-group">
 			{% for community in contact.communities %}
-				<li>{{ community.name }}</li>
+				<li class="list-group-item">{{ community.name }}</li>
 			{% endfor %}
 			</ul>
 		</td>

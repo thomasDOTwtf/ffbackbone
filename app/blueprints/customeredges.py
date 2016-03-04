@@ -46,6 +46,7 @@ def create():
     form = CreateCustomerEdge()
     form.community.query = current_user.get_communities()
     form.asn.query = current_user.get_asns()
+    form.submit.label.text='Create CustomerEdge'
     if form.validate_on_submit():
         ce = CustomerEdge()
         ce.name = form.shortname.data
@@ -54,8 +55,7 @@ def create():
         ce.ipv6 = form.ipv6.data
         ce.asn_id = form.asn.data.id
         db.session.add(ce)
-        form.community.data.ces.append(ce)
         db.session.commit()
         flash('Customer Edge has been created')
         return redirect(url_for('customeredges.list'))
-    return render_template("customeredge/detail.html.html", form=form)
+    return render_template("customeredge/detail.html", form=form)

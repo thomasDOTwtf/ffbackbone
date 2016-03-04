@@ -23,9 +23,8 @@
 	{% for nameserver in nameservers %}
 	<tr>
         	<td> {{ nameserver.fqdn }} </td>
-	        <td> {{ nameserver.Community.name }} </td>
+	        <td> {{ nameserver.community.name }} </td>
 		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('nameservers.edit', nameserver_id=nameserver.id) }}">Edit</a>&nbsp;<a href="{{ url_for('nameservers.delete', nameserver_id=nameserver.id) }}" class="btn btn-danger btn-sm active">Delete</a></td>
-
 	</tr>
 	{% endfor %}
 	</table></br></br>

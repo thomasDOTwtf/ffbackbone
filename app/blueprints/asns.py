@@ -13,6 +13,7 @@ def create():
     form = FormAS()
     form.communities.query = current_user.get_communities()
     form.contacts.query = current_user.get_contacts()
+    form.submit.label.text='Create ASN'
     if form.validate_on_submit():
         asn = AS()
         form.populate_obj(asn)
@@ -47,6 +48,7 @@ def edit(asn_id):
     form = FormAS(obj=this_asn, edit=True)
     form.communities.query = current_user.get_communities()
     form.contacts.query = current_user.get_contacts()
+    form.submit.label.text='Update ASN'
     if form.validate_on_submit():
         form.populate_obj(this_asn)
         this_asn.changed = datetime.now()
