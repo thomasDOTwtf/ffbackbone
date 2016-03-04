@@ -11,14 +11,15 @@ asns = Blueprint('asns', __name__, template_folder='templates')
 @login_required
 def create():
     form = FormAS()
-    form.community.query = current_user.get_communities()
+    form.communities.query = current_user.get_communities()
+    form.contacts.query = current_user.get_contacts()
     if form.validate_on_submit():
         asn = AS()
         form.populate_obj(asn)
         asn.created = datetime.now()
         asn.changed = datetime.now()
         db.session.add(asn)
-        asn.Community = form.community.data
+        asn.communities = form.communities.data
         db.session.commit()
         flash('Customer Edge has been created')
         return redirect(url_for('asns.list'))

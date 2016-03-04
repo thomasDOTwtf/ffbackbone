@@ -41,7 +41,7 @@
 		        {% endfor %}
 			</ul>
 		</td>
-		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('customeredges.edit', ce_id=ce.id) }}">Edit</a>&nbsp;<a href="/customeredges" class="btn btn-danger btn-sm active">Delete</a></td>
+		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('customeredges.edit', ce_id=ce.id) }}">Edit</a>&nbsp;<a href="{{ url_for('customeredges.delete', ce_id=ce.id) }}" class="btn btn-danger btn-sm active">Delete</a></td>
 
 	</tr>
 	{% endfor %}

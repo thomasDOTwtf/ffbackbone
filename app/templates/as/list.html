@@ -11,18 +11,20 @@
 	<h3>AS List</h3>
 	<table class="table table-striped">
         <colgroup>
-            <col class="col-md-2">
-	    <col class="col-md-2">
-	    <col class="col-md-2">
-	    <col class="col-md-2">
-	    <col class="col-md-2">
-	    <col class="col-md-4">
-	</colgroup>
+            <col class="col-md-1">
+	        <col class="col-md-2">
+	        <col class="col-md-2">
+	        <col class="col-md-1">
+	        <col class="col-md-2">
+	        <col class="col-md-2">
+	        <col class="col-md-2">
+	    </colgroup>
 	<tr>
 		<th>ASN</th>
 		<th>AS-Name</th>
 		<th>Description</th>
 		<th>Approved</th>
+		<th>Contacts</th>
 		<th>Community</th>
         <th>Actions</th>
 	</tr>
@@ -38,10 +40,17 @@
 				<span class="glyphicon glyphicon-ban-circle"></span>
             {% endif %}
         </td>
+        <td>
+			<ul class="list-group">
+			{% for contact in asn.contacts %}
+				<li class="list-group-item">{{ contact.nickname }}</li>
+			{% endfor %}
+			</ul>
+		</td>
 		<td> 
-			<ul>
+			<ul class="list-group">
 			{% for community in asn.Community %}
-				<li>{{ community.name }}</li>
+				<li class="list-group-item">{{ community.name }}</li>
 			{% endfor %}
 			</ul>
 		</td>

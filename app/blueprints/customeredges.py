@@ -31,6 +31,15 @@ def list():
                            customeredges=current_user.get_customeredges())
 
 
+@customeredges.route('/customeredge/delete/<ce_id>')
+@login_required
+def delete(ce_id):
+    this_edge=CustomerEdge.query.filter_by(id=ce_id)
+    this_edge.delete()
+    db.session.commit()
+    flash('CustomerEdge has been deleted successfully')
+    return redirect(url_for('customeredges.list'))
+
 @customeredges.route('/customeredge/create', methods=['GET', 'POST'])
 @login_required
 def create():
