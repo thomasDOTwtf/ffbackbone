@@ -23,6 +23,7 @@
 		<th>IP-Version</th>
 		<th>Type</th>
 		<th>Site</th>
+        <th>ORG-Handle</th>
 		<th>NameServers</th>
 		<th>Contacts</th>
 		<th>Actions</th>
@@ -33,6 +34,7 @@
 	        <td> {{ prefix.version }} </td>
 		<td> {{ prefix.PrefixType.name }} </td>
 		<td> {{ prefix.Site.name }} </td>
+        <td> {{ prefix.effectiveorghandle }} </td>
 		<td>
 			<ul class="list-group">
 			{% for ns in prefix.nameservers %} 

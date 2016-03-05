@@ -147,7 +147,7 @@ class AS(db.Model):
             return False
         if self.changed is None:
             return False
-        if self.approved>=self.changed:
+        if self.approved>=self.created:
             return True
         return False
 
@@ -281,6 +281,7 @@ class Prefix(db.Model):
     version = db.Column(db.Integer)
     prefixtype_id = db.Column(db.Integer, db.ForeignKey('prefix_type.id'))
     community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
+    orghandle = db.Column(db.String(260))
     contacts = db.relationship(
             'Contact',
             secondary=PrefixContacts,
@@ -295,6 +296,11 @@ class Prefix(db.Model):
 
     def __repr__(self):
         return self.prefix
+    def get_orghandle(self):
+        if self.orghandle is None:
+            return "FFRL-Default"
+        return self.orghandle
+    effectiveorghandle = property(get_orghandle)
 
 
 class PrefixType(db.Model):
