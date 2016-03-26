@@ -15,21 +15,24 @@ def edit(ce_id):
         flash('You don''t belong to the CustomerEdge''s Community')  # noqa
         return redirect(url_for('customeredges.list'))
     ce = CustomerEdge.query.filter_by(id=ce_id).options(
-        db.joinedload('AS')).options(db.lazyload('Community')).first()
+        db.joinedload('asn')).options(db.lazyload('community')).first()
     sessions = PeeringSession.query.filter_by(ce_id=ce.id).options(
         db.joinedload('TunnelType')).options(db.joinedload('ProviderEdge'))
+    form = CustomerEdgeForm(obj=ce, edit=True)
+    form.asn.query = current_user.get_asns()
+    form.community.query = current_user.get_communities()
     return render_template(
         'customeredge/detail-old.html',
         ce=ce,
-        sessions=sessions)
+        sessions=sessions, form=form)
 
 
 @customeredges.route('/customeredge')
 @login_required
 def list():
+    ces = current_user.get_customeredges()
     return render_template('customeredge/list.html',
-                           customeredges=current_user.get_customeredges())
-
+                           customeredges=ces)
 
 @customeredges.route('/customeredge/delete/<ce_id>')
 @login_required
@@ -43,17 +46,13 @@ def delete(ce_id):
 @customeredges.route('/customeredge/create', methods=['GET', 'POST'])
 @login_required
 def create():
-    form = CreateCustomerEdge()
+    form = CustomerEdgeForm()
     form.community.query = current_user.get_communities()
     form.asn.query = current_user.get_asns()
     form.submit.label.text='Create CustomerEdge'
     if form.validate_on_submit():
         ce = CustomerEdge()
-        ce.name = form.shortname.data
-        ce.fqdn = form.fqdn.data
-        ce.ipv4 = form.ipv4.data
-        ce.ipv6 = form.ipv6.data
-        ce.asn_id = form.asn.data.id
+        form.populate_obj(ce)
         db.session.add(ce)
         db.session.commit()
         flash('Customer Edge has been created')

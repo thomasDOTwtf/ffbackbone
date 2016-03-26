@@ -15,7 +15,7 @@
 	    <col class="col-md-2">
 	    <col class="col-md-1">
 	    <col class="col-md-2">
-	    <col class="col-md-3">
+	    <col class="col-md-2">
 	    <col class="col-md-5">
 	</colgroup>
 	<tr>
@@ -38,20 +38,27 @@
 		<td>
 			<ul class="list-group">
 			{% for ns in prefix.nameservers %} 
-			<li class="list-group-item">{{ ns.fqdn }}</a> </li>
+			<li class="list-group-item">{{ ns.fqdn }}</li>
 			{% endfor %}
 			</ul>
 		</td>
 		<td>
 		        <ul class="list-group">
                         {% for contact in prefix.contacts %}
-                        <li class="list-group-item"><a href="{{ url_for('contacts.edit', contact_id=contact.id) }}">{{ contact.lastname }}, {{ contact.firstname }} [{{ contact.handle }}]</a> </li>
+                        <li class="list-group-item">
+                            <a href="{{ url_for('contacts.edit', contact_id=contact.id) }}">
+                                {{ contact.lastname }}, {{ contact.firstname }} [{{ contact.handle }}]</a>
+                        </li>
                         {% endfor %}
-                        </ul>
-                </td>	
-		<td><a class="btn btn-primary btn-sm active" href="{{ url_for('prefixes.edit', prefix_id=prefix.id) }}">Edit</a>&nbsp;<a href="/prefixes" class="btn btn-danger btn-sm active">Delete</a></td>
+                </ul>
+        </td>
+		<td>
+            <a class="btn btn-primary btn-sm active" href="{{ url_for('prefixes.edit', prefix_id=prefix.id) }}">Edit</a>
+            &nbsp;
+            <a href="/prefixes" class="btn btn-danger btn-sm active">Delete</a>
+        </td>
 	</tr>
 	{% endfor %}
-	<table>
+	</table>
 </div>
 {% endblock %}

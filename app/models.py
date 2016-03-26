@@ -7,12 +7,6 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 app.config['SQLALCHEMY_DATABASE_URI'] = r'sqlite:///c:\sql\sql.db'
 db = SQLAlchemy(app)
 
-CommunityCEs = db.Table(
-    'CommunityCEs',
-    db.Column('community_id', db.Integer, db.ForeignKey('community.id')),
-    db.Column('CustomerEdge_id', db.Integer, db.ForeignKey('customer_edge.id'))
-)
-
 CommunityASNs = db.Table(
     'CommunityASs',
     db.Column('community_id', db.Integer, db.ForeignKey('community.id')),
@@ -56,8 +50,7 @@ class Community(db.Model):
             )
     ces = db.relationship(
             'CustomerEdge',
-            secondary=CommunityCEs,
-            backref=db.backref('Community', lazy='joined')
+            back_populates="community"
             )
     asns = db.relationship(
             'AS',
@@ -81,6 +74,15 @@ class CustomerEdge(db.Model):
     ipv4 = db.Column(db.String(260), unique=True)
     ipv6 = db.Column(db.String(260), unique=True)
     asn_id = db.Column(db.Integer, db.ForeignKey('AS.id'))
+    asn = db.relationship(
+        'AS',
+        back_populates="customeredges"
+    )
+    community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
+    community = db.relationship(
+        'Community',
+        back_populates="ces"
+    )
     sessions = db.relationship(
             'PeeringSession',
             backref='CustomerEdge',
@@ -134,11 +136,9 @@ class AS(db.Model):
             uselist='False'
             )
     customeredges = db.relationship(
-            'CustomerEdge',
-            backref='AS',
-            lazy='dynamic',
-            uselist='False'
-            )
+        'CustomerEdge',
+        back_populates="asn"
+    )
 
     def isapproved(self):
         if self.approved is None:
@@ -200,7 +200,7 @@ class Contact(db.Model):
     def get_customeredges(self):
         comm_subq = Community.query.filter(
         Community.contacts.contains(self)).subquery()
-        return CustomerEdge.query.join(comm_subq, CustomerEdge.Community)
+        return CustomerEdge.query.options(db.subqueryload(CustomerEdge.asn)).join(comm_subq, CustomerEdge.community)
 
     def is_authenticated(self):
         return True

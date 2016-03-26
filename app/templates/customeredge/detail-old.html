@@ -7,21 +7,37 @@
 <div class="page-header">
 	<h1>Customer Edge - {{ ce.name }} </h1>
 </div>
+<script>
+$(document).ready(function(){
+		    $('[data-toggle="tooltip"]').tooltip();
+		    });
+</script>
+    <div class="col-md-7">
+    {% if form.errors %}
+        <ul class="errors">
+            {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+                {% for error in field_errors %}
+                    <li>{{ form[field_name].label }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+	<form class="form-horizontal" role="form" method="post">
+        {{ form.csrf_token() }}
 <div class="container">
 	<h3>Basic Information</h3>
 	<p>Find Basic Information below:</p>
-	FQDN: {{ ce.fqdn }} </br>
-	AS: {{ ce.AS.asn }} </br>
-	IPv4: {{ ce.ipv4 }} </br>
-	IPv6: {{ ce.ipv6 }} </br>
+    Name: {{ form.name(class="form-control") }} <br/>
+	FQDN: {{ form.fqdn(class="form-control") }} <br/>
+	AS: {{ form.asn(class="form-control") }} <br/>
+	IPv4: {{ form.ipv4(class="form-control") }} <br/>
+	IPv6: {{ form.ipv6(class="form-control") }} <br/>
 </div>
 <div class="container">
 	<h3>Communities</h3>
-	<p>This CustomerEdge is visilble to following Communities:</p>
+	<p>This CustomerEdge is visible to following Communities:</p>
 	<ul>
-	{% for community in ce.Community %}
-		<li>{{ community.name }}</li>
-	{% endfor %}
+	{{ form.community(class="form-control") }}
 	</ul>
 </div>
  <div class="container">
@@ -59,5 +75,6 @@
                                 </tbody>
                         </table>
                 </div>
-
+    </form>
+    </div>
 {% endblock %}
