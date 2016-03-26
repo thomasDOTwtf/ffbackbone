@@ -21,6 +21,7 @@ def edit(ce_id):
     form = CustomerEdgeForm(obj=ce, edit=True)
     form.asn.query = current_user.get_asns()
     form.community.query = current_user.get_communities()
+    form.submit.label.text = 'Update Customer Edge'
     sessionform = SessionForm()
     sessionform.type.query = TunnelType.query
     return render_template(
