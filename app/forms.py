@@ -54,6 +54,9 @@ class CustomerEdgeForm(Form):
             validators=[DataRequired(), IPAddress(ipv6=True, ipv4=False)])
     submit = SubmitField('Create CE')
 
+class SessionForm(Form):
+    type = QuerySelectField('Type', validators=[DataRequired()])
+    submit = SubmitField('Create Sessions')
 
 class FormAS(Form):
     asn = IntegerField('ASN', validators=[DataRequired()])

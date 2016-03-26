@@ -21,10 +21,12 @@ def edit(ce_id):
     form = CustomerEdgeForm(obj=ce, edit=True)
     form.asn.query = current_user.get_asns()
     form.community.query = current_user.get_communities()
+    sessionform = SessionForm()
+    sessionform.type.query = TunnelType.query
     return render_template(
         'customeredge/detail-old.html',
         ce=ce,
-        sessions=sessions, form=form)
+        sessions=sessions, form=form, sessionform=sessionform)
 
 
 @customeredges.route('/customeredge')
