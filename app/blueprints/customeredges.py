@@ -25,7 +25,7 @@ def edit(ce_id):
     sessionform = SessionForm()
     sessionform.type.query = TunnelType.query
     return render_template(
-        'customeredge/detail-old.html',
+        'customeredge/detail.html',
         ce=ce,
         sessions=sessions, form=form, sessionform=sessionform)
 
@@ -60,4 +60,4 @@ def create():
         db.session.commit()
         flash('Customer Edge has been created')
         return redirect(url_for('customeredges.list'))
-    return render_template("customeredge/detail.html", form=form)
+    return render_template("customeredge/new.html", form=form)
