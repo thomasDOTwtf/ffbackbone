@@ -7,11 +7,10 @@ from app.models import *
 
 customeredges = Blueprint('customeredges', __name__, template_folder='templates')
 
-@customeredges.route('/customeredge/<ce_id>')
+@customeredges.route('/customeredge/<ce_id>', methods=['GET', 'POST'])
 @login_required
 def edit(ce_id):
-    customeredges = current_user.get_customeredges().filter_by(id=ce_id).all()
-    if customeredges is None:
+    if current_user.is_ce_permitted(ce_id) is False:
         flash('You don''t belong to the CustomerEdge''s Community')  # noqa
         return redirect(url_for('customeredges.list'))
     ce = CustomerEdge.query.filter_by(id=ce_id).options(
@@ -24,11 +23,38 @@ def edit(ce_id):
     form.submit.label.text = 'Update Customer Edge'
     sessionform = SessionForm()
     sessionform.type.query = TunnelType.query
+    if form.validate_on_submit():
+        flash('CustomerEdge edited successfully!')
+        return redirect(url_for('customeredges.list'))
+    if sessionform.validate_on_submit():
+        return redirect(url_for('customeredges.edit',ce_id=ce_id))
     return render_template(
         'customeredge/detail.html',
         ce=ce,
         sessions=sessions, form=form, sessionform=sessionform)
 
+@customeredges.route('/customeredge/<ce_id>/<session_id>/<state>')
+@login_required
+def session_changestate(ce_id, session_id, state):
+    if current_user.is_ce_permitted(ce_id) is False:
+        flash('You don''t belong to the CustomerEdge''s Community')  # noqa
+        return redirect(url_for('customeredges.list'))
+    session = PeeringSession.query.filter_by(id=session_id).first()
+    session.enabled = state
+    db.session.add(session)
+    db.session.commit()
+    return redirect(url_for('customeredges.edit',ce_id=ce_id))
+
+@customeredges.route('/customeredge/<ce_id>/deletesessions')
+@login_required
+def delete_sessions(ce_id):
+    if current_user.is_ce_permitted(ce_id) is False:
+        flash('You don''t belong to the CustomerEdge''s Community')  # noqa
+        return redirect(url_for('customeredges.list'))
+    ce = CustomerEdge.query.filter_by(id=ce_id).first()
+    ce.sessions.delete()
+    db.session.commit()
+    return redirect(url_for('customeredges.edit', ce_id=ce_id))
 
 @customeredges.route('/customeredge')
 @login_required

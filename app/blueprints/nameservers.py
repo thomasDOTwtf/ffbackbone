@@ -50,6 +50,7 @@ def edit(nameserver_id):
         this_nameserver.changed = datetime.now()
         db.session.add(this_nameserver)
         db.session.commit()
+        flash('Nameserver edited successfully!')
         return redirect(url_for('nameservers.list'))
     return render_template("nameserver/detail.html", form=form, edit=True)
 

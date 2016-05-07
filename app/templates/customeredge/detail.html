@@ -115,10 +115,10 @@
                             <td>{{ session.TunnelType.name }}</td>
                             {% if session.enabled %}
                                 <td><span class="glyphicon glyphicon-ok-circle"></span></td>
-                                <td><a href="#" class="btn btn-warning">Disable</a></td>
+                                <td><a href="{{ url_for('customeredges.session_changestate', ce_id=ce.id,session_id=session.id, state=0) }}" class="btn btn-warning">Disable</a></td>
                             {% else %}
                                 <td><span class="glyphicon glyphicon-ban-circle"></span></td>
-                                <td><a href="#" class="btn btn-success">Enable</a></td>
+                                <td><a href="{{ url_for('customeredges.session_changestate', ce_id=ce.id,session_id=session.id, state=1) }}" class="btn btn-success">Enable</a></td>
                             {% endif %}
                         </tr>
                     {% endfor %}
@@ -126,7 +126,7 @@
                 </table>
                 <div class="form-group">
                     <div class="col-sm-5">
-                        <a href="#" class="btn btn-danger">Delete Sessions</a>
+                        <a href="{{ url_for('customeredges.delete_sessions', ce_id=ce.id) }}" class="btn btn-danger">Delete Sessions</a>
                     </div>
                 </div>
             {% endif %}

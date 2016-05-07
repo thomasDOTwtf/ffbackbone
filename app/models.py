@@ -202,6 +202,13 @@ class Contact(db.Model):
         Community.contacts.contains(self)).subquery()
         return CustomerEdge.query.options(db.subqueryload(CustomerEdge.asn)).join(comm_subq, CustomerEdge.community)
 
+    def is_ce_permitted(self, ce_id):
+        customeredges = self.get_customeredges().filter_by(id=ce_id).all()
+        if customeredges is None:
+            return False
+        else:
+            return True
+
     def is_authenticated(self):
         return True
 
