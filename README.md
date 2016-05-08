@@ -1,5 +1,6 @@
-# ffbackbone
-Backbone Admin Tool
+# ffbackbone project
+
+##Backbone Admin Tool
 
 This project should make users able to create them selfs GRE-Tunnels to FFRL Backbone infrastructure.
 The Webinterface contained in this project stores all information inside a database.
