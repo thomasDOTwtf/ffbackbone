@@ -4,6 +4,7 @@ from werkzeug import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Kennwort1@localhost/testdb?charset=utf8&use_unicode=0'  # noqa
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True;
 app.config['SQLALCHEMY_DATABASE_URI'] = r'sqlite:///c:\sql\sql.db'
 db = SQLAlchemy(app)
 
