@@ -2,6 +2,8 @@ from app import app
 from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from netaddr import *
+import pprint
 
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Kennwort1@localhost/testdb?charset=utf8&use_unicode=0'  # noqa
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True;
@@ -310,6 +312,26 @@ class Prefix(db.Model):
         return self.orghandle
     effectiveorghandle = property(get_orghandle)
 
+    @staticmethod
+    def get_availprefix(prefixtype_id, ip_version, length):
+        availset = IPSet()
+        prefixes = Prefix.query.filter_by(id=prefixtype_id, version=ip_version).all()
+        sessions = PeeringSession.query.all()
+        for prefix in prefixes:
+            availset.add(IPNetwork(prefix.prefix))
+        for session in sessions:
+            availset.remove(IPAddress(session.ce_v4))
+            availset.remove(IPAddress(session.pe_v4))
+        if len(availset) is 0:
+            return None
+        x = availset.pop()
+        while x.prefixlen > 31:
+            x = availset.pop()
+        if x.prefixlen == 31:
+            return x
+        else:
+            x = list(x.subnet(31))
+            return x.pop()
 
 class PrefixType(db.Model):
     id = db.Column(db.Integer, primary_key=True)

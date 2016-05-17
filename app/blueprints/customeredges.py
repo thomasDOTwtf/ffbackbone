@@ -4,6 +4,7 @@ from flask.ext.login import current_user, login_required
 from datetime import datetime
 from app.forms import *
 from app.models import *
+from netaddr import *
 
 customeredges = Blueprint('customeredges', __name__, template_folder='templates')
 
@@ -27,6 +28,20 @@ def edit(ce_id):
         flash('CustomerEdge edited successfully!')
         return redirect(url_for('customeredges.list'))
     if sessionform.validate_on_submit():
+        print('gen sessions')
+        #Generate GRE tunnels, ips and sessions
+        pes = ProviderEdge.query.all()
+        for pe in pes:
+            transfer = Prefix.get_availprefix(1,4,31)
+            session = PeeringSession()
+            session.pe_id = pe.id
+            session.ce_id = ce_id
+            session.pe_v4 = str(transfer[0])
+            session.ce_v4 = str(transfer[1])
+            session.tunneltype_id = 1
+            session.enabled = 1
+            db.session.add(session)
+            db.session.commit()
         return redirect(url_for('customeredges.edit',ce_id=ce_id))
     return render_template(
         'customeredge/detail.html',
